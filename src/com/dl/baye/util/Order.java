@@ -1,4 +1,4 @@
-package com.dl.baye.core;
+package com.dl.baye.util;
 
 public class Order {
 	//命令编号

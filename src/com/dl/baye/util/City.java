@@ -1,4 +1,4 @@
-package com.dl.baye.core;
+package com.dl.baye.util;
 
 import java.util.ArrayList;
 
@@ -38,7 +38,7 @@ public class City {
 	//人才数
 	private int personsNum;
 	//道具队列
-	private ArrayList<GOODS> toolQueue;
+	private ArrayList<Goods> toolQueue;
 	//道具数
 	private int toolsNum;
 	//名称

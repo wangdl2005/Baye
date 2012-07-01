@@ -1,8 +1,8 @@
-package com.dl.baye.core;
+package com.dl.baye.util;
 
-import com.dl.baye.core.Common.ARMS_TYPE;
+import com.dl.baye.util.Constant.ARMS_TYPE;
 
-public class GOODS {
+public class Goods {
 	//序号
 	private int idx;
 	//使用标志：是被使用还是被装备

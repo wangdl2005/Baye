@@ -1,9 +1,9 @@
-package com.dl.baye.core;
+package com.dl.baye.util;
 
 import java.util.ArrayList;
 
-import com.dl.baye.core.Common.ARMS_TYPE;
-import com.dl.baye.core.Common.CHARACTER;
+import com.dl.baye.util.Constant.ARMS_TYPE;
+import com.dl.baye.util.Constant.CHARACTER;
 //武将人才
 public class Person {
 	//编号
@@ -30,7 +30,7 @@ public class Person {
 	//兵力
 	private int armsNum;
 	//装备
-	private ArrayList<GOODS> Euips;
+	private ArrayList<Goods> Euips;
 	//年龄
 	private int age;
 	//名称

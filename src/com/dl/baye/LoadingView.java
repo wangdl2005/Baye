@@ -105,7 +105,7 @@ public class LoadingView extends SurfaceView implements SurfaceHolder.Callback{
 		private LoadingView loadingView;
 		private boolean flag = false;
         public DrawThread(SurfaceHolder surfaceHolder, LoadingView loadingView) {//构造器
-        	super.setName("==LoadingView.DrawThrea");
+        	super.setName("LoadingView.DrawThread");
             this.surfaceHolder = surfaceHolder;
             this.loadingView = loadingView;
         }

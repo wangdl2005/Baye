@@ -2,6 +2,7 @@ package com.dl.baye;
 
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
@@ -28,7 +29,9 @@ public class BayeActivity extends Activity {
 	Handler myHandler = new Handler(){
 		public void handleMessage(android.os.Message msg) {
 			switch(msg.what){
-			
+			case 0:
+	    		setContentView(R.layout.main);
+				break;
 			}			
 		};
 	};
@@ -37,14 +40,15 @@ public class BayeActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-      //全屏
+    	//强制为横屏
+    	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        //全屏
   		requestWindowFeature(Window.FEATURE_NO_TITLE); 
   		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN ,  
   		              WindowManager.LayoutParams.FLAG_FULLSCREEN);
   		//MyHandle type设置
-  		loadingView = new LoadingView(this, 0);
-  		setContentView(loadingView);
+  		GameView gv = new GameView(this);
+  		setContentView(gv);
   		//初始化资源
     }
     
@@ -74,10 +78,16 @@ public class BayeActivity extends Activity {
     		System.exit(0);
     	}
     }
-
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
+    
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if(currentView != null){
 			currentView.onKeyDown(keyCode, event);
+		}
+		
+		//test
+		if(loadingView != null){
+			loadingView.process += 30;
 		}
 		return super.onKeyDown(keyCode, event);
 	}

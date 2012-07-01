@@ -2,7 +2,8 @@ package com.dl.baye;
 
 import java.util.HashMap;
 
-import android.R.color;
+import static com.dl.baye.util.Constant.*;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -21,10 +22,11 @@ import android.view.View.*;
 public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	//状态机状态
 	/*
-	 * 
+	 * 0:正常；
 	 */
 	private int status = 0;
 	BayeActivity activity;
+	DrawThread drawThread;//刷帧的线程
 	
 	static Bitmap dialogBack;
 	static Bitmap dialogButton;
@@ -61,25 +63,45 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 		super(bayeActivity);
 		//TODO 初始化资源
 		this.activity = bayeActivity;
+		resources = this.getResources();
+		if(activity.loadingView != null){//走进度条
+        	activity.loadingView.process += 30;
+        }
+		
+		getHolder().addCallback(this);
+        this.drawThread = new DrawThread(getHolder(), this);//初始化刷帧线程
+        this.gvt = new GameViewThread(this);//初始化后台数据修改线程        
+        
+        initMap();//初始化地图
+        initClass();//初始化所有用到的类
 	}
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-		// TODO Auto-generated method stub
-		
+		this.drawThread.setFlag(true);
+		drawThread.setIsViewOn(true);
+        if(! drawThread.isAlive()){//如果后台重绘线程没起来,就启动它
+        	try
+        	{
+        		drawThread.start();
+        	}
+        	catch(Exception e)
+        	{
+        		e.printStackTrace();
+        	}        	
+        }
+        
+        this.setOnTouchListener(this);
 	}
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
-			int height) {
-		// TODO Auto-generated method stub
-		
+			int height) {		
 	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		// TODO Auto-generated method stub
-		
+		this.drawThread.setIsViewOn(false);
 	}
 
 	@Override
@@ -88,7 +110,12 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 			int x = (int) event.getX();
 			int y = (int) event.getY();
 			switch(this.status){
-			
+				case 0:
+				{
+					//
+					mapView.onTouchEvent(event);
+				}
+				break;
 			}
 		}
 		return  true;
@@ -100,6 +127,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 			case 0:
 			{
 				//主界面绘制
+				mapView.onDraw(canvas);
 				break;
 			}
 		}
@@ -123,7 +151,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	//initial
 	//初始化子view
 	public void initClass(){
-		
+		mapView = new MapView(activity);
 	}	
 	//地图
 	public void initMap(){
@@ -141,6 +169,57 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	
 	//刷新帧线程
 	class DrawThread extends Thread{
-		
+
+		private int sleepSpan = GAME_VIEW_SLEEP_SPAN;//睡眠的毫秒数 
+		private SurfaceHolder surfaceHolder;
+		private GameView gameView;
+		private boolean isViewOn = false;
+		private boolean flag = true;
+        public DrawThread(SurfaceHolder surfaceHolder, GameView gameView) {//构造器
+        	super.setName("==GameView.DrawThread");
+            this.surfaceHolder = surfaceHolder;
+            this.gameView = gameView;
+        }
+        
+        public void setFlag(boolean flag) {//设置循环标记位
+        	this.flag = flag;
+        }
+        
+        public void setIsViewOn(boolean isViewOn){
+        	this.isViewOn = isViewOn;
+        }
+        
+		public void run() {
+			Canvas c;
+			while(flag){
+	            while (isViewOn) {
+	                c = null;
+	                try {
+	                	// 锁定整个画布，在内存要求比较高的情况下，建议参数不要为null
+	                    c = this.surfaceHolder.lockCanvas(null);
+	                    synchronized (this.surfaceHolder) {
+	                    	gameView.onDraw(c);
+	                    }
+	                } finally {
+	                    if (c != null) {
+	                    	//更新屏幕显示内容
+	                        this.surfaceHolder.unlockCanvasAndPost(c);
+	                    }
+	                }
+	                try{
+	                	Thread.sleep(sleepSpan);//睡眠指定毫秒数
+	                }
+	                catch(Exception e){
+	                	e.printStackTrace();
+	                }
+	            }
+	            try{
+	            	Thread.sleep(1500);//睡眠指定毫秒数
+	            }
+	            catch(Exception e){
+	            	e.printStackTrace();
+	            }
+			}
+		}
 	}
 }

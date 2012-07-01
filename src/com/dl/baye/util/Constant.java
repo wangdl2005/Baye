@@ -1,9 +1,10 @@
 package com.dl.baye.util;
 
 public class Constant {
-	public static final int SCREEN_WIDTH = 320;//屏幕宽度    
-	public static final int SCREEN_HEIGHT = 480;//屏幕宽度    
+	public static final int SCREEN_WIDTH = 800;//屏幕宽度    
+	public static final int SCREEN_HEIGHT = 442;//屏幕宽度    
 	 
+	public static final String TAG = "SanGuoBaYe";
 	/**
 	 * MenuView界面中用到的常量
 	 */

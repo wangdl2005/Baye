@@ -73,8 +73,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	//子View
 	MapView mapView;
 	CityView cityView;
-	PersonChooseView personChooseView;
-	PersonAtrrView personAttrView;
+	PersonView personView;
 	//声音
 	MediaPlayer mMediaPlayer;
 	SoundPool soundPool;
@@ -141,6 +140,10 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 					//
 					mapView.onTouchEvent(event);
 				}
+				case 1:
+				{
+					personView.onTouchEvent(event);
+				}
 				break;
 			}
 		}
@@ -154,6 +157,11 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 			{
 				//主界面绘制
 				mapView.onDraw(canvas);
+				break;
+			}
+			case 1:
+			{
+				personView.onDraw(canvas);
 				break;
 			}
 		}
@@ -178,12 +186,15 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	//初始化子view
 	public void initClass(){
 		//initial cities		
-		initCityList();
+		initGoods();
 		initPersons();
 		initPeriodKings();
-		initGoods();
+		initCityList();
+		
+		//
 		
 		mapView = new MapView(this);
+		personView = new PersonView(this);
 	}	
 	//地图
 	public void initMap(){
@@ -241,6 +252,8 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 //		21 水战兵符
 		this.gGoods.put(0x01, new Goods(0x01,0x00,"方天画戟","吕布兵器"
 				,10,0,0,0));
+		this.gGoods.put(0x02, new Goods(0x02,0x00,"七星刀","王兵器"
+				,5,0,0,0));
 	}
 	
 	//获取君主列表
@@ -253,9 +266,49 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	}
 	//获取城市列表
 	public void initCityList(){
+		ArrayList<Person> personsTemp = new ArrayList<Person>();
+		personsTemp.add(gPersons.get(0));
+		personsTemp.add(gPersons.get(0));
+		personsTemp.add(gPersons.get(0));
+		personsTemp.add(gPersons.get(0));
+		personsTemp.add(gPersons.get(0));
+		personsTemp.add(gPersons.get(0));
+		personsTemp.add(gPersons.get(0));
+		personsTemp.add(gPersons.get(0));
+		personsTemp.add(gPersons.get(0));
+		personsTemp.add(gPersons.get(0));
+		personsTemp.add(gPersons.get(0));
+		personsTemp.add(gPersons.get(0));
+		personsTemp.add(gPersons.get(0));
+		personsTemp.add(gPersons.get(0));
+		personsTemp.add(gPersons.get(0));
+		ArrayList<Goods> goodsTmep = new ArrayList<Goods>();
+		goodsTmep.add(gGoods.get(2));
 		this.gCities.put(1, new City(1, 0, 0, 5000, 1000, 5000, 1000, 80, 50
-				, 10000, 3000, 1000, 1000, 1000, null, 1, null, 0, "西凉", null, null));
+				, 10000, 3000, 1000, 1000, 1000, personsTemp, 1, goodsTmep, 1, "西凉", null, null));
 		this.rCities.put(1, new CitySet(110,75));
+	}
+	
+	public String getGoods(int idx){
+		if(gGoods.get(idx)!=null){
+			return gGoods.get(idx).getName();
+		}
+		return "无";
+	}
+	
+	//开垦
+	public boolean Assart(){
+		//选择武将
+		if(status == 0){
+			setStatus(1);
+			return false;
+		}
+		else if(status == 2)
+		{
+			Order order = new Order();
+			return orderQueue.offer(order);
+		}
+		return false;
 	}
 	
 	//刷新帧线程

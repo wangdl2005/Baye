@@ -105,6 +105,8 @@ public class MapView{
 				if(rChild_1.contains(x, y)){
 					//开垦
 					Log.d(TAG, "开垦");
+					//test
+					gameView.setStatus(1);
 				}else if(rChild_2.contains(x, y)){
 					Log.d(TAG, "招商");
 				}else if(rChild_3.contains(x, y)){

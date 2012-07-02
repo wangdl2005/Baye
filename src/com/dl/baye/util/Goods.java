@@ -10,6 +10,10 @@ public class Goods {
 	private int userflag;
 	//道具名字
 	private String name;
+	public String getName() {
+		return name;
+	}
+
 	//道具说明
 	private String inform;
 	//对武力加成

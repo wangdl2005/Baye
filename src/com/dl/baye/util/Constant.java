@@ -449,4 +449,51 @@ public class Constant {
 		}
 		return chara;
 	}
+	
+	public static String formatArmsType(ARMS_TYPE armsType){
+		String str = null;
+		switch(armsType){
+		case BuBing:
+			str = "步兵";
+			break;
+		case JiBing:
+			str = "极兵";
+			break;
+		case GongBing:
+			str = "弓兵";
+			break;
+		case QiBing:
+			str = "骑兵";
+			break;
+		case ShuiBing:
+			str = "水兵";
+			break;
+		case XuanBing:
+			str = "玄兵";
+			break;
+		}
+		return str;
+	}
+	//鲁莽、怕死、贪财、大志、忠义
+	public static String formatCharacter(CHARACTER chara){
+		String str= null;
+		switch(chara){
+		case AVARICE:
+			str = "贪财";
+			break;
+		case DREAD:
+			str = "怕死";
+			break;
+		case IDEAL:
+			str = "大志";
+			break;
+		case LOYALISM:
+			str = "忠义";
+			break;
+		case TEMERITY:
+			str = "鲁莽";
+			break;
+		}
+		return str;
+	}
 }

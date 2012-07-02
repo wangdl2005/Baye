@@ -173,7 +173,8 @@ public class BayeActivity extends Activity {
   		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN ,  
   		              WindowManager.LayoutParams.FLAG_FULLSCREEN);
   		//MyHandle type设置
-  		toLoadingView(11);
+  		//toLoadingView(11);
+  		setContentView(new GameView(this));
   		//初始化资源
     }
     

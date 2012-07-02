@@ -1,6 +1,7 @@
 package com.dl.baye.util;
 
 import com.dl.baye.util.Constant.ARMS_TYPE;
+import static com.dl.baye.util.Constant.*;
 
 public class Goods {
 	//序号
@@ -19,4 +20,15 @@ public class Goods {
 	private int addMove;
 	//兵种的变化
 	private ARMS_TYPE arm;
+	
+	public Goods(int idx,int uerflag,String name,String inform,int addForce,int addIq,int addMove,int arm){
+		this.idx = idx;
+		this.userflag = uerflag;
+		this.name = name;
+		this.inform = inform;
+		this.addForce = addForce;
+		this.addIq = addIq;
+		this.addMove = addMove;
+		this.arm = toArmsType(arm);
+	}
 }

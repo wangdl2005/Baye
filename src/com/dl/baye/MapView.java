@@ -6,6 +6,9 @@ import java.util.ArrayList;
 
 import com.dl.baye.LoadingView.DrawThread;
 import com.dl.baye.util.City;
+import com.dl.baye.util.CitySet;
+import com.dl.baye.util.Goods;
+import com.dl.baye.util.Person;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -25,23 +28,18 @@ import android.view.View;
 import android.view.View.OnTouchListener;;
 
 public class MapView{
-	BayeActivity activity;
+	GameView gameView;
 	static Bitmap bmpBtnBack;
 	static Bitmap bmpMap;
 	static Bitmap bmpBtnSelected;
 	
 	static final int SEAM_BUTTON_TEXT = 9;
-	static final int mapStartX = 380;
-	static final int mapStartY = 20;
 	static final int cityPosWidth = 7;
-	int mapX;
-	int mapY; 
 	int mapWidth = 400;
 	int mapHeight = 400;
 
 	//menu 0:无子菜单;1-6：内政、军事、外交、人才、君主、信息的子菜单
 	static int menuPos = 0;
-	static City selCity;
 	
 	//内政、军事、外交、人才、君主、信息
 	Rect rInterior = new Rect();
@@ -58,14 +56,13 @@ public class MapView{
 	Rect rChild_5 = new Rect();
 	Rect rChild_6 = new Rect();
 	Rect rChild_7 = new Rect();
-	ArrayList<Rect> rCities = new ArrayList<Rect>();
 	Rect rMap = new Rect();
 	private DrawThread drawThread;
 	
-	public MapView(BayeActivity activity) {
-		this.activity = activity;
+	public MapView(GameView gv) {
+		this.gameView = gv;
         
-		initBitmap(activity.getResources());
+		initBitmap(gv.getResources());
 		initRect();
 	}
 
@@ -74,14 +71,16 @@ public class MapView{
 			int x = (int) event.getX();
 			int y = (int) event.getY();
 			//处理地图
-			for(Rect r : rCities){
-				if(r.contains(x, y)){
+			CitySet cSet = null;
+			for(int i :gameView.rCities.keySet()){
+				cSet = gameView.rCities.get(i);
+				if(getRect(cSet).contains(x, y)){
 					menuPos = 0;
 					//TODO set city
-					selCity = new City();
+					cSet.setId(i);
+					gameView.gCitySet = cSet;
 				}
-			}
-			
+			}			
 			//******处理Menu******
 			//生成子菜单
 			if(rInterior.contains(x, y)){
@@ -199,8 +198,11 @@ public class MapView{
 	protected void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.WHITE);
 		drawMap(canvas);
-		if(selCity != null){
-			createMenu(canvas, menuPos);
+		if(gameView.gCitySet != null){
+			//draw CityInfo
+			drawCityInfo(canvas,gameView.gCitySet);
+			
+			createMenu(canvas, menuPos);			
 		}
 	}
 	
@@ -228,10 +230,7 @@ public class MapView{
 		
 		rMap = new Rect(mapStartX, mapStartY, mapStartX + mapWidth, mapStartY + mapHeight);
 		
-		mapX = 100;
-		mapY = 100;
-		rCities.add(new Rect(mapStartX + mapX -cityPosWidth,mapStartY + mapY -cityPosWidth,
-				mapStartX + mapX + cityPosWidth,mapStartY + mapY +cityPosWidth));
+
 	}
 	
 	public void drawMap(Canvas canvas){
@@ -241,9 +240,71 @@ public class MapView{
 		Paint paint = new Paint();						//创建画笔对象
 		paint.setColor(Color.BLACK);
 		paint.setAntiAlias(true);						//设置抗锯齿
-		for(Rect r : rCities){
-			canvas.drawRect(r, paint);
+		CitySet cSet = null;
+		for(int i :gameView.rCities.keySet()){
+			cSet = gameView.rCities.get(i);
+			canvas.drawRect(getRect(cSet),paint);
 		}
+	}
+	
+	public Rect getRect(CitySet cs){
+		int selX = cs.getSelX();
+		int selY = cs.getSelY();
+//		return new Rect(mapStartX + mapX -cityPosWidth,mapStartY + mapY -cityPosWidth,
+//				mapStartX + mapX + cityPosWidth,mapStartY + mapY +cityPosWidth);
+		return new Rect(mapStartX +selX -cityPosWidth,mapStartY + selY -cityPosWidth,mapStartX +selX +cityPosWidth,mapStartY + selY +cityPosWidth);
+	}
+	
+	public void drawCityInfo(Canvas canvas,CitySet cSet){
+		//
+		Paint paint = new Paint();						//创建画笔对象
+		paint.setARGB(255, 42, 48, 103);				//设置画笔颜色
+		paint.setAntiAlias(true);						//设置抗锯齿
+		paint.setTypeface(Typeface.create((Typeface)null,Typeface.ITALIC));//设置字体
+		paint.setTextSize(20);							//设置字号
+		
+		City city = gameView.gCities.get(cSet.getId());
+		int id = city.getId();
+		String name = city.getName();
+		String king = gameView.gPersons.get(city.getBelong()).getName();
+		String Satrap = gameView.gPersons.get(city.getSatrapId()).getName();
+		int farmingLimit = city.getFarmingLimit();
+		int farming = city.getFarming();
+		int commerce = city.getCommerce();
+		int commerceLimit = city.getCommerceLimit();
+		int peopleDevotion = city.getPeopleDevotion();
+		int AvoidCalamity = city.getAvoidCalamity();
+		int population = city.getPopulation();
+		int populationLimit =city.getPopulationLimit();
+		int mothBallArmsNum = city.getMothballArmsNum();
+		int money = city.getMoney();
+		int food = city.getFood();
+		int personsNum = city.getPersonsNum();
+		int toolsNum = city.getToolsNum();
+		
+		final int infoStartX = 140;
+		final int infoStartY = 50;
+		int infoX,infoY;
+		final int infoHeight = 30;
+		infoX = infoStartX;
+		infoY = infoStartY;
+		canvas.drawText("编号:" + id + "    城市:" + name,infoX,infoY,paint);
+		infoY += infoHeight;
+		canvas.drawText("君主:" + king + "    太守:" + Satrap,infoX,infoY,paint);
+		infoY += infoHeight;
+		canvas.drawText("农业:" + farming + "/"  + farmingLimit,infoX,infoY,paint);
+		infoY += infoHeight;
+		canvas.drawText("商业:" + commerce + "/" + commerceLimit,infoX,infoY,paint);
+		infoY += infoHeight;
+		canvas.drawText("人口:" + population + "/"  + populationLimit,infoX,infoY,paint);
+		infoY += infoHeight;
+		canvas.drawText("兵力:" + mothBallArmsNum,infoX,infoY,paint);
+		infoY += infoHeight;
+		canvas.drawText( "民心:" + peopleDevotion + "  防灾:" + AvoidCalamity,infoX,infoY,paint);
+		infoY += infoHeight;
+		canvas.drawText("金钱:" + money + "    粮食:" + food,infoX,infoY,paint);
+		infoY += infoHeight;
+		canvas.drawText("人才:" + personsNum + "    道具:" + toolsNum,infoX,infoY,paint);
 	}
 	
 	public void createMenu(Canvas canvas,int menuPos){
@@ -375,4 +436,6 @@ public class MapView{
 			}
 		}
 	}
+
+
 }

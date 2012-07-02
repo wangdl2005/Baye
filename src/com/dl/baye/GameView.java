@@ -1,6 +1,15 @@
 package com.dl.baye;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
+
+import com.dl.baye.util.City;
+import com.dl.baye.util.CitySet;
+import com.dl.baye.util.Goods;
+import com.dl.baye.util.Order;
+import com.dl.baye.util.Person;
 
 import static com.dl.baye.util.Constant.*;
 
@@ -10,6 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.view.MotionEvent;
@@ -27,6 +37,27 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	private int status = 0;
 	BayeActivity activity;
 	DrawThread drawThread;//刷帧的线程
+	//命令队列，用于在一个周期结束时，对所有命令执行
+	Queue<Order> orderQueue = new LinkedList<Order>() ;
+	//君主ID
+	int gPlayerKingId;
+	//当前日期
+	int gYearDate;
+	int gMonthDate;
+	//当前时期
+	int gPhaseIndex;
+	//当前选中武将
+	Person gPersonSel;
+	HashMap<Integer,CitySet> rCities = new HashMap<Integer,CitySet>(CITY_MAX);
+	HashMap<Integer,City> gCities = new HashMap<Integer,City>(CITY_MAX);
+	//武将/道具
+	HashMap<Integer,Person> gPersons = new HashMap<Integer,Person>(PERSON_MAX);
+	HashMap<Integer,Goods> gGoods = new HashMap<Integer,Goods>(GOODS_MAX);
+	//君主
+	ArrayList<Integer> gKings = new ArrayList<Integer>(KING_MAX);
+	//ArrayList<CitySet> gCitySets = new ArrayList<CitySet>(CITY_MAX);
+	//当前显示城市位置
+	CitySet gCitySet;
 	
 	static Bitmap dialogBack;
 	static Bitmap dialogButton;
@@ -53,12 +84,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	
 	Paint paint;
 	public static Resources resources;
-	
-	public GameView(Context context) {
-		super(context);
-		// TODO Auto-generated constructor stub
-	}
-	
+		
 	public GameView(BayeActivity bayeActivity) {
 		super(bayeActivity);
 		//TODO 初始化资源
@@ -151,7 +177,13 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	//initial
 	//初始化子view
 	public void initClass(){
-		mapView = new MapView(activity);
+		//initial cities		
+		initCityList();
+		initPersons();
+		initPeriodKings();
+		initGoods();
+		
+		mapView = new MapView(this);
 	}	
 	//地图
 	public void initMap(){
@@ -165,7 +197,66 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	//数码管显示数字？
 	//TODO
 	
+	public void initPersons(){
+		//董卓：00 01 01 56 24 64 00 00 00 00 0000 0200 33
+		this.gPersons.put(0x00, new Person(
+				0x00,0x01,0x01,0x56,0x24,0x64,0x00,0x00,0x00,0x00,0x0000,0x0200,0x33
+				,"董卓",180,0,0
+				));
+	}
 	
+	public void initGoods(){
+//		01 方天画戟 
+//		02 七星刀 
+//		03 青龙刀
+//		04 杖八矛 
+//		05 双股剑 
+//		06 三尖刀 
+//		07 双铁戟 
+//		08 倚天剑 
+//		09 青虹刀 
+//		0a 望月枪 
+//		0b 古淀刀 
+//		0c 六韬
+//		0d 司马法 
+//		0e 孙子兵法
+//		0f 范蠡兵法
+//		10 墨子
+//		11 吴子兵法 
+//		12 鬼谷子
+//		13 孙膑兵法
+//		14 尉缭子
+//		15 商君书
+//		16 三略
+//		17 赤兔 
+//		18 的卢 
+//		19 绝影 
+//		1a 爪黄飞电 
+//		1b 王追 
+//		1c 惊帆 
+//		1d 白鸽 
+//		1e 快航 
+//		1f 铁骑兵符 
+//		20 太玄兵符 
+//		21 水战兵符
+		this.gGoods.put(0x01, new Goods(0x01,0x00,"方天画戟","吕布兵器"
+				,10,0,0,0));
+	}
+	
+	//获取君主列表
+	public void initPeriodKings(){
+		this.gKings.add(0x00);
+	}
+	//获得玩家君主
+	public void getPlayerKing(int idx){
+		
+	}
+	//获取城市列表
+	public void initCityList(){
+		this.gCities.put(1, new City(1, 0, 0, 5000, 1000, 5000, 1000, 80, 50
+				, 10000, 3000, 1000, 1000, 1000, null, 1, null, 0, "西凉", null, null));
+		this.rCities.put(1, new CitySet(110,75));
+	}
 	
 	//刷新帧线程
 	class DrawThread extends Thread{

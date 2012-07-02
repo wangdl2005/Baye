@@ -6,6 +6,13 @@ public class Constant {
 	 
 	public static final String TAG = "SanGuoBaYe";
 	/**
+	 * MapView 使用常量
+	 */
+
+	public static final int mapStartX = 380;
+	public static final int mapStartY = 20;
+	
+	/**
 	 * MenuView界面中用到的常量
 	 */
 	public static final int MENU_VIEW_SLEEP_SPAN = 200;//MenuView界面刷帧线程睡眠时间
@@ -65,6 +72,8 @@ public class Constant {
 	public static final int MAP_BUTTON_START_Y = 392;//迷你地图开关的开始y坐标
 	public static final int MAP_BUTTON_SIZE = 17;//迷你地图开关的大小
 	public static final int STRENGTH_COST_DECREMENT = 2;//每次技能升级减小的体力消耗值
+	//最大君主数
+	public static final int KING_MAX = 100;
 	//最大武将数
 	public static final int PERSON_MAX = 200;
 	//最大城市数
@@ -106,11 +115,18 @@ public class Constant {
 	
 	//性格:鲁莽、怕死、贪财、大志、忠义
 	public enum CHARACTER{
-		TEMERITY,
-		DREAD,
-		AVARICE,
-		IDEAL,
-		LOYALISM
+		TEMERITY(0),
+		DREAD(1),
+		AVARICE(2),
+		IDEAL(3),
+		LOYALISM(4);
+		private int value;
+		CHARACTER(int value){
+			this.value = value;
+		}
+		public int getValue(){
+			return value;
+		}
 	}
 	//性格离间几率:鲁莽、怕死、贪财、大志、忠义
 	public enum CHARACTER_ALIENATE{
@@ -215,8 +231,26 @@ public class Constant {
 		}
 	}
 	// 兵种
+//	00 骑兵 
+//	01 步兵 
+//	02 弓兵 
+//	03 水兵 
+//	04 极兵 
+//	05 玄兵 
 	public enum ARMS_TYPE{
-		
+		QiBing(0),
+		BuBing(1),
+		GongBing(2),
+		ShuiBing(3),
+		JiBing(4),
+		XuanBing(5);
+		private int value;
+		private ARMS_TYPE(int val){
+			this.value = val;
+		}
+		public int getVale(){
+			return value;
+		}
 	}
 	
 	//命令:内政、外交、军备、
@@ -368,5 +402,51 @@ public class Constant {
 		public int getValue(){
 			return value;
 		}
+	}
+	
+	public static CHARACTER toCharacter(int val){
+		CHARACTER chara =null;
+		switch(val){
+		case 0:
+			chara = CHARACTER.TEMERITY;
+			break;
+		case 1 :
+			chara = CHARACTER.DREAD;
+			break;
+		case 2:
+			chara = CHARACTER.AVARICE;
+			break;
+		case 3 :
+			chara = CHARACTER.IDEAL;
+			break;
+		case 4:
+			chara = CHARACTER.LOYALISM;
+			break;
+		}
+		return chara;
+	}
+	public static ARMS_TYPE toArmsType(int val){
+		ARMS_TYPE chara =null;
+		switch(val){
+		case 0:
+			chara = ARMS_TYPE.QiBing;
+			break;
+		case 1 :
+			chara = ARMS_TYPE.BuBing;
+			break;
+		case 2:
+			chara = ARMS_TYPE.GongBing;
+			break;
+		case 3 :
+			chara = ARMS_TYPE.ShuiBing;
+			break;
+		case 4:
+			chara = ARMS_TYPE.JiBing;
+			break;
+		case 5:
+			chara = ARMS_TYPE.XuanBing;
+			break;
+		}
+		return chara;
 	}
 }

@@ -33,7 +33,7 @@ public class PlainAlert extends GameAlert {
 	@Override
 	public void drawDialog(Canvas canvas) {
 		//背景
-		canvas.drawBitmap(bmpDialogBack, 0, DIALOG_START_Y,null);
+		canvas.drawBitmap(bmpDialogBack, DIALOG_START_X, DIALOG_START_Y,null);
 		drawString(canvas, alertMessage);
 		//画按钮确定按钮
 		canvas.drawBitmap(bmpDialogButton, DIALOG_BTN_START_X, DIALOG_BTN_START_Y, null);		

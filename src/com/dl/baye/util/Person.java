@@ -182,6 +182,7 @@ public class Person {
 			,int exper,int thew,int armType,int armsNum,int Euips,int age//,...
 			){
 		this.id = id;
+		this.belong = belong-1;
 		this.level = level;
 		this.force = force;
 		this.iq = iq;

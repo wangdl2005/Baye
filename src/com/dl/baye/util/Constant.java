@@ -34,23 +34,21 @@ public class Constant {
 	 * GameView界面中用到的常量
 	 */
 	public static final int GAME_VIEW_SLEEP_SPAN = 100;//GameView界面刷帧线程睡眠时间
-	public static final int DIALOG_START_Y = 360;//游戏中对话框的绘制y坐标，x坐标为零
+	public static final int DIALOG_START_X = 240;
+	public static final int DIALOG_START_Y = 300;//游戏中对话框的绘制y坐标，x坐标为零
 	//对话框中的文字大小如果为16，那么开始x坐标为24，1行的汉字数为17
 	//对话框中的文字大小如果为18，那么开始x坐标为24 ，1行的汉字数为15
 	public static final int DIALOG_WORD_SIZE = 16;//对话框中文字的大小
-	public static final int DIALOG_WORD_START_X = 24;//对话框中文字开始的x坐标
-	public static final int DIALOG_WORD_START_Y = 390;//对话框文字开始的y坐标
+	public static final int DIALOG_WORD_START_X = 360;//对话框中文字开始的x坐标
+	public static final int DIALOG_WORD_START_Y = 350;//对话框文字开始的y坐标
 	public static final int DIALOG_WORD_EACH_LINE = 17;//对话框每行的文字个数
-	public static final int DIALOG_BTN_START_X = 50;//对话框中按钮的开始x坐标
-	public static final int DIALOG_BTN_START_Y = 440;//对话框中按钮的开始y坐标
+	public static final int DIALOG_BTN_START_X = 370;//对话框中按钮的开始x坐标
+	public static final int DIALOG_BTN_START_Y = 360;//对话框中按钮的开始y坐标
 	public static final int DIALOG_BTN_WIDTH = 60;//对话框中按钮的宽度
 	public static final int DIALOG_BTN_HEIGHT = 30;//对话框中按钮的高度
 	public static final int DIALOG_BTN_SPAN = 160;//对话框中两个按钮的x方向上的间距
 	public static final int DIALOG_BTN_WORD_LEFT = 12;//对话框中按钮上文字距按钮左边的距离
 	public static final int DIALOG_BTN_WORD_UP = 6;//对话框中按钮上文字距按钮上边沿的距离
-	public static final int DICE_START_X = 2;//骰子开始的x坐标
-	public static final int DICE_START_Y = 452;//骰子开始的y坐标
-	public static final int DICE_SPAN = 28;//骰子之间的间距
 	public static final int GAME_VIEW_MEMU_WORD_SPACE = 10;//GameView界面中出现的主菜单之间的上下间距
 	public static final int GAME_VIEW_MEMU_LEFT_SPACE = 100;//GameView界面中出现的主菜单距左边距的距离
 	public static final int GAME_VIEW_MEMU_UP_SPACE = 90;//GameView界面中出现的主菜单距上边沿的距离	

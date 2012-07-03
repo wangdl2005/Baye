@@ -171,6 +171,11 @@ public class City {
 	public void setDistances(ArrayList<Integer> distances) {
 		this.distances = distances;
 	}
+	
+	public  ArrayList<Person> getFuLu(){
+		return new ArrayList<Person> ();
+	}
+	
 
 	//编号
 	private int id;

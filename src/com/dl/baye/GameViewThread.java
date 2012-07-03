@@ -1,5 +1,8 @@
 package com.dl.baye;
 
+import android.util.Log;
+import static com.dl.baye.util.Constant.*;
+
 import com.dl.baye.util.City;
 
 public class GameViewThread extends Thread {
@@ -30,6 +33,7 @@ public class GameViewThread extends Thread {
 			}
 			{
 				//电脑操作
+				Log.d(TAG,"computer doing");
 			}
 			{
 				//执行命令队列
@@ -99,51 +103,51 @@ public class GameViewThread extends Thread {
 				resetVar();
 				break;
 			case GameView.STATUS_BATTLE:
-				gv.makeBattle(city, gv.gPersonSel);
+				gv.makeBattle(city,cityToDo, gv.gPersonSel);
 				break;
 			case GameView.STATUS_CONSCRIPTION:
 				gv.makeConscriotion(city, gv.gPersonSel);
 				break;
 			case GameView.STATUS_DISTRIBUTE:
-				gv.makeDistribute(city,gv.gPersonSel);
+				//gv.makeDistribute(city,gv.gPersonSel);
 				break;
 			case GameView.STATUS_DEPREDATE:
 				gv.makeDepredate(city,gv.gPersonSel);
 				break;
 			case GameView.STATUS_TRANSPORTATION:
-				gv.makeTransportation(city,gv.gPersonSel);
+				gv.makeTransportation(city,cityToDo,gv.gPersonSel);
 				break;
 				
 			case GameView.STATUS_ALIENATE:
-				gv.makeAlienate(city,gv.gPersonSel);
+				gv.makeAlienate(city,cityToDo,gv.gPersonSel);
 				break;
 			case GameView.STATUS_CANVASS:
-				gv.makeCanvass(city,gv.gPersonSel);
+				gv.makeCanvass(city,cityToDo,gv.gPersonSel,gv.gPersonSelToDo);
 				break;
 			case GameView.STATUS_COUNTERESPIONAGE:
-				gv.makeCounterespionage(city,gv.gPersonSel);
+				gv.makeCounterespionage(city,cityToDo,gv.gPersonSel,gv.gPersonSelToDo);
 				break;
 			case GameView.STATUS_REALIENATE:
-				gv.makeRealienate(city,gv.gPersonSel);
+				gv.makeRealienate(city,cityToDo,gv.gPersonSel);
 				break;
 			case GameView.STATUS_INDUCE:
-				gv.makeInduce(city,gv.gPersonSel);
+				gv.makeInduce(city,cityToDo,gv.gPersonSel);
 				break;
 			case GameView.STATUS_TRIBUTE:
 				gv.makeTribute(city,gv.gPersonSel);
 				break;
 				
 			case GameView.STATUS_SURRENDER:
-				gv.makeSurrender(city,cityToDo,gv.gPersonSel,gv.gPersonSelToDo);
+				gv.makeSurrender(city, gv.gPersonSel, gv.gPersonSelToDo);
 				break;
 			case GameView.STATUS_KILL:
-				gv.makeKill(city,gv.gPersonSel);
+				gv.makeKill(city, gv.gPersonSel, gv.gPersonSelToDo);
 				break;
 			case GameView.STATUS_BANISH:
-				gv.makeBanish(city,gv.gPersonSel);
+				gv.makeBanish(city, gv.gPersonSel, gv.gPersonSelToDo);
 				break;
 			case GameView.STATUS_MOVE:
-				gv.makeMove(city,gv.gPersonSel);
+				gv.makeMove(city,cityToDo,gv.gPersonSel);
 				break;
 				
 			case GameView.STATUS_LARGESS:
@@ -153,7 +157,7 @@ public class GameViewThread extends Thread {
 				gv.makeConfiscate(city,gv.gPersonSel);
 				break;
 			case GameView.STATUS_TREAT:
-				gv.makeTreat(city,gv.gPersonSel);
+				gv.makeTreat(city);
 				break;	
 			}		
 

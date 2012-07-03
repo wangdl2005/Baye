@@ -158,31 +158,75 @@ public class MapView{
 							orderId = GameView.STATUS_RECONNOITRE;
 						}
 					}else if(rChild_2.contains(x, y)){
+						if(gameView.canBattle(city)){
+							setStatus(STATUS_PICK_CITY);
+							orderId = GameView.STATUS_BATTLE;	
+						}
 						Log.d(TAG, "出兵");
 					}else if(rChild_3.contains(x, y)){
+						if(gameView.canConscriotion(city))
+						{
+							gameView.toPersonView(GameView.STATUS_CONSCRIPTION,personsInCity);
+						}
 						Log.d(TAG, "征兵");
 					}else if(rChild_4.contains(x, y)){
+						//TODO
 						Log.d(TAG, "分配");
 					}else if(rChild_5.contains(x, y)){
+						if(gameView.canDepredate(city))
+						{
+							gameView.toPersonView(GameView.STATUS_DEPREDATE,personsInCity);
+						}
 						Log.d(TAG, "掠夺");
 					}else if(rChild_6.contains(x, y)){
+						if(gameView.canTransportation(city)){
+							setStatus(STATUS_PICK_CITY);
+							orderId = GameView.STATUS_TRANSPORTATION;	
+						}
+						
 						Log.d(TAG, "输送");
 					}
 				}
 					break;
 				case 3:
 				{
+					City city = gameView.gCities.get(gameView.gCitySet.getId());
+					ArrayList<Person> personsInCity = city.getPersonQueue();
 					if(rChild_1.contains(x, y)){
+						if(gameView.canTransportation(city)){
+						setStatus(STATUS_PICK_CITY);
+						orderId = GameView.STATUS_ALIENATE;	
+					}
 						Log.d(TAG, "离间");
 					}else if(rChild_2.contains(x, y)){
+						if(gameView.canCanvass(city)){
+							setStatus(STATUS_PICK_CITY);	
+							orderId = GameView.STATUS_CANVASS;
+						}
 						Log.d(TAG, "招揽");
 					}else if(rChild_3.contains(x, y)){
+						if(gameView.canCounterespionage(city)){
+							setStatus(STATUS_PICK_CITY);	
+							orderId = GameView.STATUS_COUNTERESPIONAGE;
+						}
 						Log.d(TAG, "策反");
 					}else if(rChild_4.contains(x, y)){
+						if(gameView.canRealienate(city)){
+							setStatus(STATUS_PICK_CITY);
+							orderId = GameView.STATUS_REALIENATE;	
+						}
 						Log.d(TAG, "反间");
 					}else if(rChild_5.contains(x, y)){
+						if(gameView.canInduce(city)){
+							setStatus(STATUS_PICK_CITY);
+							orderId = GameView.STATUS_INDUCE;	
+						}
 						Log.d(TAG, "劝降");
 					}else if(rChild_6.contains(x, y)){
+						if(gameView.canTribute(city))
+						{
+							gameView.toPersonView(GameView.STATUS_TRIBUTE,personsInCity);
+						}
 						Log.d(TAG, "朝贡");
 					}
 				}
@@ -190,29 +234,49 @@ public class MapView{
 				case 4:
 				{
 					City city = gameView.gCities.get(gameView.gCitySet.getId());
-					ArrayList<Person> personsInCity = city.getPersonQueue();
+					ArrayList<Person> personsInEnemyCity = city.getFuLu();
 					if(rChild_1.contains(x, y)){
 						Log.d(TAG, "招降");
 						if(gameView.canSurrender(city)){
-							setStatus(STATUS_PICK_CITY);	
-							orderId = GameView.STATUS_SURRENDER;
+							gameView.toEnemyView(GameView.STATUS_SURRENDER,personsInEnemyCity);
 						}
 					}else if(rChild_2.contains(x, y)){
+						if(gameView.canKill(city)){
+							gameView.toEnemyView(GameView.STATUS_KILL,personsInEnemyCity);
+						}
 						Log.d(TAG, "处斩");
 					}else if(rChild_3.contains(x, y)){
+						if(gameView.canBanish(city)){
+							gameView.toEnemyView(GameView.STATUS_BANISH,personsInEnemyCity);
+						}
 						Log.d(TAG, "流放");
 					}else if(rChild_4.contains(x, y)){
+						if(gameView.canMove(city)){
+							setStatus(STATUS_PICK_CITY);
+							orderId = GameView.STATUS_MOVE;	
+						}
 						Log.d(TAG, "移动");
 					}
 				}
 					break;
 				case 5:
 				{
+					City city = gameView.gCities.get(gameView.gCitySet.getId());
+					ArrayList<Person> personsInCity = city.getPersonQueue();
 					if(rChild_1.contains(x, y)){
+						if(gameView.canLargess(city)){
+							gameView.toPersonView(GameView.STATUS_LARGESS,personsInCity);
+						}
 						Log.d(TAG, "赏赐");
 					}else if(rChild_2.contains(x, y)){
+						if(gameView.canConfiscate(city)){
+							gameView.toPersonView(GameView.STATUS_CONFISCATE,personsInCity);
+						}
 						Log.d(TAG, "没收");
 					}else if(rChild_3.contains(x, y)){
+						if(gameView.canTreat(city)){
+							gameView.setStatus(GameView.STATUS_TREAT);
+						}
 						Log.d(TAG, "宴请");
 					}
 				}
@@ -220,9 +284,10 @@ public class MapView{
 				case 6:
 				{
 					if(rChild_1.contains(x, y)){
+						gameView.toPersonView(GameView.STATUS_NORMAL, gameView.getGPersons());
 						Log.d(TAG, "武将");
-						gameView.toPersonView(0, gameView.getGPersons());
 					}else if(rChild_2.contains(x, y)){
+						gameView.toCityView(gameView.getGCities());
 						Log.d(TAG, "城市");
 					}else if(rChild_3.contains(x, y)){
 						Log.d(TAG, "势力");
@@ -231,6 +296,11 @@ public class MapView{
 					}
 				}
 					break;
+				}
+				
+				if(new Rect(btnOKX,btnOKY,btnOKX+btnWidth * 2,btnOKY+btnHeight).contains(x,y))
+				{
+					gameView.setStatus(GameView.STATUS_ENDTURN);
 				}
 				
 			}
@@ -247,20 +317,43 @@ public class MapView{
 				//确定按钮
 				if(new Rect(btnOKX,btnOKY,btnOKX+btnWidth,btnOKY+btnHeight).contains(x,y))
 				{
-					
+					City city = gameView.gCities.get(gameView.gCitySet.getId());
+					ArrayList<Person> personsInCity = city.getPersonQueue();
+
+					City enemycity = gameView.gCities.get(gameView.gCitySetToDo.getId());
+					ArrayList<Person> personsInEnemyCity = enemycity.getPersonQueue();
 					switch(orderId){
 					case GameView.STATUS_RECONNOITRE:
-						City city = gameView.gCities.get(gameView.gCitySet.getId());
-						ArrayList<Person> personsInCity = city.getPersonQueue();
 						gameView.toPersonView(GameView.STATUS_RECONNOITRE, personsInCity);
 						break;
-					case GameView.STATUS_SURRENDER:
-						City enemycity = gameView.gCities.get(gameView.gCitySetToDo.getId());
-						ArrayList<Person> personsInEnemyCity = enemycity.getPersonQueue();
-						gameView.toEnemyView(GameView.STATUS_SURRENDER,personsInEnemyCity);
+					case GameView.STATUS_BATTLE:
+						gameView.toPersonView(GameView.STATUS_BATTLE, personsInCity);
+						break;
+					case GameView.STATUS_TRANSPORTATION:
+						gameView.toPersonView(GameView.STATUS_TRANSPORTATION, personsInCity);
+						break;
+						
+					case GameView.STATUS_ALIENATE:
+						gameView.toPersonView(GameView.STATUS_ALIENATE, personsInCity);
+						break;
+					case GameView.STATUS_CANVASS:
+						gameView.toEnemyView(GameView.STATUS_CANVASS,personsInEnemyCity);
+						break;
+					case GameView.STATUS_COUNTERESPIONAGE:
+						gameView.toEnemyView(GameView.STATUS_COUNTERESPIONAGE,personsInEnemyCity);
+						break;
+					case GameView.STATUS_REALIENATE:
+						gameView.toPersonView(GameView.STATUS_REALIENATE, personsInCity);
+						break;
+					case  GameView.STATUS_INDUCE:
+						gameView.toPersonView(GameView.STATUS_INDUCE, personsInCity);
+						break;
+						
+					case GameView.STATUS_MOVE:
+						gameView.toPersonView(GameView.STATUS_MOVE, personsInCity);
 						break;
 					}
-
+					//TODO
 					setStatus(STATUS_NORMAL);
 				}
 			}
@@ -276,7 +369,15 @@ public class MapView{
 				//draw CityInfo
 				drawCityInfo(canvas,gameView.gCitySet);
 				
-				createMenu(canvas, menuPos);			
+				createMenu(canvas, menuPos);		
+				
+				//绘制结束回合Button
+				canvas.drawBitmap(bmpBtnBack,null,new Rect(btnOKX , btnOKY, btnOKX + btnWidth * 2,btnOKY + btnHeight),null);
+				Paint paint = new Paint();
+				paint.setARGB(255, 42, 48, 103);//设置字体颜色
+				paint.setAntiAlias(true);//抗锯齿
+				paint.setTextSize(18);
+				canvas.drawText("结束回合", btnOKX + 10, btnOKY + 20, paint);
 			}
 		}
 		if(status == STATUS_PICK_CITY )

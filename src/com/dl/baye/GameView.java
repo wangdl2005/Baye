@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
+
 import com.dl.baye.util.City;
 import com.dl.baye.util.CitySet;
 import com.dl.baye.util.Goods;
@@ -16,6 +17,7 @@ import static com.dl.baye.util.Constant.*;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -71,6 +73,9 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	static final int STATUS_NORMAL = 0;
 	static final int STATUS_PERSONVIEW = 1;
 	static final int STATUS_ENEMYVIEW = 2;
+	static final int STATUS_CITYVIEW = 3;
+	static final int STATUS_GOODSVIEW = 4;
+	static final int STATUS_INFLUENCEVIEW = 5;
 	static final int STATUS_ENDTURN =100;
 	//以下命令status 也可以作为命令ID
 	static final int STATUS_ASSART = 901;
@@ -138,9 +143,6 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	
 	static Bitmap[] smallGameMenuOptions = new Bitmap[6];
 	boolean showMiniMap;
-	//屏幕在大地图中的行列数
-	int startRow = 0;
-	int startCol = 0;
 	//....
 	//修改数据的后台线程
 	GameViewThread gvt;
@@ -149,6 +151,8 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	CityView cityView;
 	PersonView personView;
 	EnemyView enemyView;
+	GoodsView goodsView;
+	InfluenceView influenceView;
 	//声音
 	MediaPlayer mMediaPlayer;
 	SoundPool soundPool;
@@ -173,6 +177,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
         this.gvt = new GameViewThread(this);//初始化后台数据修改线程     
         gvt.start();
         
+        initBitmap(resources);
         initMap();//初始化地图
         initClass();//初始化所有用到的类
 	}
@@ -211,13 +216,13 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 //			int x = (int) event.getX();
 //			int y = (int) event.getY();
 			switch(this.getStatus()){
-				case 0:
+				case STATUS_NORMAL:
 				{
 					//
 					mapView.onTouchEvent(event);
 					break;
 				}
-				case 1:
+				case STATUS_PERSONVIEW:
 				{
 					personView.onTouchEvent(event);
 					break;
@@ -225,6 +230,21 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 				case STATUS_ENEMYVIEW:
 				{
 					enemyView.onTouchEvent(event);
+					break;
+				}
+				case STATUS_CITYVIEW:
+				{
+					cityView.onTouchEvent(event);
+					break;
+				}
+				case STATUS_GOODSVIEW:
+				{
+					goodsView.onTouchEvent(event);
+					break;
+				}
+				case STATUS_INFLUENCEVIEW:
+				{
+					influenceView.onTouchEvent(event);
 					break;
 				}
 			}
@@ -243,6 +263,10 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 				{
 					//主界面绘制
 					mapView.onDraw(canvas);
+					if(currentGameAlert != null ){//判断是否需要绘制游戏提示
+						currentGameAlert.drawDialog(canvas);		//绘制对话框
+						setOnTouchListener(currentGameAlert);		//设置GameView的监听器
+					}
 					break;
 				}
 				case STATUS_PERSONVIEW:
@@ -255,6 +279,15 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 					enemyView.onDraw(canvas);
 					break;
 				}
+				case STATUS_CITYVIEW:
+					cityView.onDraw(canvas);
+					break;
+				case STATUS_GOODSVIEW:
+					goodsView.onDraw(canvas);
+					break;
+				case STATUS_INFLUENCEVIEW:
+					influenceView.onDraw(canvas);
+					break;
 			}
 		}
 		//super.onDraw(canvas);
@@ -292,15 +325,52 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	}
 	//图片资源
 	public void initBitmap(Resources r){
-		
+		dialogBack = BitmapFactory.decodeResource(r, R.drawable.dialog_back);
+		Bitmap temp = BitmapFactory.decodeResource(r, R.drawable.buttons);
+		dialogButton = Bitmap.createBitmap(temp, 0, 0, 60, 30);
 	}
 	
 	
 	public void initPersons(){
-		//董卓：00 01 01 56 24 64 00 00 00 00 0000 0200 33
+	   //董卓：00 01 01 56 24 64 00 00 00 00 0000 0200 33
+//		曹操01(01 02 01 54 5A 64 03 00 00 00 0000 0000 23)
+//		袁绍02(02 03 01 49 46 64 04 00 00 02 0000 0000 24)
+//		袁术03(03 04 01 4E 54 64 01 00 00 01 0000 0000 23)
+//		孙坚04(04 05 01 5F 51 64 04 00 00 00 0000 0E0B 23)
+//		马腾05(05 06 01 59 2E 64 04 00 00 00 0000 0000 22)
+//		陶谦06(06 07 01 2E 41 64 01 00 00 01 0000 0000 3A)
+//		孔融07(07 08 01 39 52 64 04 00 00 02 0000 0000 25)
 		this.gPersons.put(0x00, new Person(
 				0x00,0x01,0x01,0x56,0x24,0x64,0x00,0x00,0x64,0x00,0x0000,0x0200,0x33
 				,"董卓",180,0,0
+				));
+		this.gPersons.put(0x01, new Person(
+				0x01,0x02,0x01,0x54,0x5A,0x64,0x03,0x00,0x64,0x00,0x0000,0x0000,0x23
+				,"曹操",180,0,0
+				));
+		this.gPersons.put(0x02, new Person(
+				0x02,0x03,0x01,0x49,0x46,0x64,0x04,0x00,0x64,0x02,0x0000,0x0000,0x24
+				,"袁绍",180,0,0
+				));
+		this.gPersons.put(0x03, new Person(
+				0x03,0x04,0x01,0x4E,0x54,0x64,0x01,0x00,0x64,0x01,0x0000,0x0000,0x23
+				,"袁术",180,0,0
+				));
+		this.gPersons.put(0x04, new Person(
+				0x04,0x05,0x01,0x5F,0x51,0x64,0x04,0x00,0x64,0x00,0x0000,0x0E0B,0x23
+				,"孙坚",180,0,0
+				));
+		this.gPersons.put(0x05, new Person(
+				0x05,0x06,0x01,0x59,0x2E,0x64,0x04,0x00,0x64,0x00,0x0000,0x0000,0x22
+				,"马腾",180,0,0
+				));
+		this.gPersons.put(0x06, new Person(
+				0x06,0x07,0x01,0x2E,0x41,0x64,0x01,0x00,0x64,0x01,0x0000,0x0000,0x3A
+				,"陶谦",180,0,0
+				));
+		this.gPersons.put(0x07, new Person(
+				0x07,0x08,0x01,0x39,0x52,0x64,0x04,0x00,0x64,0x02,0x0000,0x0000,0x25
+				,"孔融",180,0,0
 				));
 	}
 	
@@ -342,6 +412,10 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 				,10,0,0,0));
 		this.gGoods.put(0x02, new Goods(0x02,0x00,"七星刀","王兵器"
 				,5,0,0,0));
+		this.gGoods.put(0x0b, new Goods(0x0b,0x00,"古淀刀 ","孙兵器"
+				,5,0,0,0));
+		this.gGoods.put(0x0e, new Goods(0x0e,0x00,"孙子兵法","书"
+				,0,5,0,0));
 	}
 	
 	//获取君主列表
@@ -356,25 +430,25 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	public void initCityList(){
 		ArrayList<Person> personsTemp = new ArrayList<Person>();
 		personsTemp.add(gPersons.get(0));
-		personsTemp.add(gPersons.get(0));
-		personsTemp.add(gPersons.get(0));
-		personsTemp.add(gPersons.get(0));
-		personsTemp.add(gPersons.get(0));
-		personsTemp.add(gPersons.get(0));
-		personsTemp.add(gPersons.get(0));
-		personsTemp.add(gPersons.get(0));
-		personsTemp.add(gPersons.get(0));
-		personsTemp.add(gPersons.get(0));
-		personsTemp.add(gPersons.get(0));
-		personsTemp.add(gPersons.get(0));
-		personsTemp.add(gPersons.get(0));
-		personsTemp.add(gPersons.get(0));
-		personsTemp.add(gPersons.get(0));
+		personsTemp.add(gPersons.get(1));
+		personsTemp.add(gPersons.get(3));
+		personsTemp.add(gPersons.get(4));
 		ArrayList<Goods> goodsTmep = new ArrayList<Goods>();
 		goodsTmep.add(gGoods.get(2));
 		this.gCities.put(1, new City(1, 0, 0, 5000, 1000, 5000, 1000, 80, 50
-				, 10000, 3000, 1000, 1000, 1000, personsTemp, 1, goodsTmep, 1, "西凉", null, null));
+				, 10000, 3000, 10, 1000, 1000, personsTemp, 1, goodsTmep, 1, "西凉", null, null));
 		this.rCities.put(1, new CitySet(110,75));
+		
+		personsTemp = new ArrayList<Person>();
+		personsTemp.add(gPersons.get(2));
+		personsTemp.add(gPersons.get(5));
+		personsTemp.add(gPersons.get(6));
+		personsTemp.add(gPersons.get(7));
+		goodsTmep = new ArrayList<Goods>();
+		goodsTmep.add(gGoods.get(1));
+		this.gCities.put(2, new City(2, 2, 2, 5000, 1000, 5000, 1000, 80, 50
+				, 10000, 3000, 1000, 1000, 1000, personsTemp, 1, goodsTmep, 1, "长安", null, null));
+		this.rCities.put(2, new CitySet(160,140));
 	}
 	
 	public String getGoods(int idx){
@@ -400,6 +474,24 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 		enemyView.setStatusReturn(statusReturn);
 		setStatus(STATUS_ENEMYVIEW);
 	}
+	public void toCityView(ArrayList<City> citys){
+		if(cityView == null){
+			cityView = new CityView(this,citys);
+		}
+		setStatus(STATUS_CITYVIEW);
+	}
+	public void toGoodsView(ArrayList<Goods> tools){
+		if(goodsView == null){
+//			goodsView = new GoodsView(this,tools);
+		}
+		setStatus(STATUS_GOODSVIEW);
+	}
+	public void toInfluenceView(ArrayList<City> citys){
+		if(influenceView == null){
+//			influenceView = new InfluenceView(this,citys);
+		}
+		setStatus(STATUS_INFLUENCEVIEW);
+	}
 	
 	//开垦
 	public boolean canAssart(City city){
@@ -407,12 +499,18 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 			//达到上限
 			return false;
 		}
+		return isMoneyOrPersonEnough(city);
+	}
+
+	private boolean isMoneyOrPersonEnough(City city) {
 		if(city.getMoney() < 100){
 			// 金钱不足
+			alert("金钱不足");
 			return false;
 		}
 		if(city.getPersonsNum() <= 0){
 			// 人手不足
+			alert("人手不足");
 			return false;
 		}
 		return true;
@@ -438,19 +536,11 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	
 	//招商
 	public boolean canAccractBusiness(City city){
-		if(city.getPersonsNum() <= 0){
-			// 人手不足
-			return false;
-		}
 		if(city.getCommerce() == city.getCommerceLimit()){
 			//达到上限
 			return false;
 		}
-		if(city.getMoney() < 100){
-			// 金钱不足
-			return false;
-		}
-		return true;
+		return isMoneyOrPersonEnough(city);
 	}
 	
 	public void makeAccractBusiness(City city,Person person){
@@ -472,15 +562,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	}
 	//搜寻
 	public boolean canSearch(City city){
-		if(city.getPersonsNum() <= 0){
-			// 人手不足
-			return false;
-		}
-		if(city.getMoney() < 100){
-			// 金钱不足
-			return false;
-		}
-		return true;
+		return isMoneyOrPersonEnough(city);
 	}
 	
 	public void makeSearch(City city,Person person){
@@ -502,19 +584,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	}
 	//治理
 	public boolean canFather(City city){
-		if(city.getPersonsNum() <= 0){
-			// 人手不足
-			return false;
-		}
-//		if(city.getAvoidCalamity() == 100){
-//			//达到上限
-//			return false;
-//		}
-		if(city.getMoney() < 100){
-			// 金钱不足
-			return false;
-		}
-		return true;
+		return isMoneyOrPersonEnough(city);
 	}
 	
 	public void makeFather(City city,Person person){
@@ -536,19 +606,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	}
 	//出巡
 	public boolean canInspection(City city){
-		if(city.getPersonsNum() <= 0){
-			// 人手不足
-			return false;
-		}
-//		if(city.getAvoidCalamity() == 100){
-//			//达到上限
-//			return false;
-//		}
-		if(city.getMoney() < 100){
-			// 金钱不足
-			return false;
-		}
-		return true;
+		return isMoneyOrPersonEnough(city);
 	}
 	
 	public void makeInspection(City city,Person person){
@@ -579,15 +637,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	}
 	//侦察
 	public boolean canReconnoitre(City city){
-		if(city.getPersonsNum() <= 0){
-			// 人手不足
-			return false;
-		}
-		if(city.getMoney() < 100){
-			// 金钱不足
-			return false;
-		}
-		return true;
+		return isMoneyOrPersonEnough(city);
 	}
 	
 	public void makeReconnoitre(City city,City cityTo,Person person){
@@ -609,126 +659,153 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 		setStatus(STATUS_NORMAL);
 	}
 	//出兵
-	public boolean canBattle(City city,Person person){
-		return true;
+	public boolean canBattle(City city){
+		if(city.getFood() < 1000){
+			//
+			alert("粮食不够");
+		}
+		return isMoneyOrPersonEnough(city);
 	}
 	
-	public void makeBattle(City city,Person person){
+	public void makeBattle(City city,City cityTo,Person person){
+		if(isPersonManual(person, STATUS_BATTLE) == true){
+			//orderConsumeMoney(city, STATUS_BATTLE);
+			orderConsumeThew(person, STATUS_BATTLE);
+			//food --
+			city.setFood(city.getFood() - 300);
+			
+			Order order = new Order();
+			order.setId(STATUS_BATTLE);
+			order.setPerson(person);
+			order.setCity(city);
+			order.setCityTo(cityTo);
+			//TODO
+			order.setTimeCount(1);
+			orderQueue.offer(order);
+			
+			delPerson(city, person);
+		}
 		Log.d(TAG, ""+STATUS_BATTLE);
 		setStatus(STATUS_NORMAL);
 	}
 	//征兵
-	public boolean canConscriotion(City city,Person person){
-		return true;
+	public boolean canConscriotion(City city){
+		return isMoneyOrPersonEnough(city);
 	}
 	
 	public void makeConscriotion(City city,Person person){
+		if(isPersonManual(person, STATUS_CONSCRIPTION) == true){
+			orderConsumeMoney(city, STATUS_CONSCRIPTION);
+			orderConsumeThew(person, STATUS_CONSCRIPTION);
+			
+			Order order = new Order();
+			order.setId(STATUS_CONSCRIPTION);
+			order.setPerson(person);
+			order.setCity(city);
+			order.setTimeCount(0);
+			orderQueue.offer(order);
+			
+			delPerson(city, person);
+		}
 		Log.d(TAG, ""+STATUS_CONSCRIPTION);
 		setStatus(STATUS_NORMAL);
 	}
 	//分配
-	public boolean canDistribute(City city,Person person){
+	public boolean canDistribute(City city){
+		if(city.getMothballArmsNum() < 100){
+			alert("兵力不足");
+			return false;
+		}
 		return true;
 	}
 	
 	public void makeDistribute(City city,Person person){
+		//TODO 分配兵力
 		Log.d(TAG, ""+STATUS_DISTRIBUTE);
 		setStatus(STATUS_NORMAL);
 	}
 	//掠夺
-	public boolean canDepredate(City city,Person person){
+	public boolean canDepredate(City city){
 		return true;
 	}
 	
 	public void makeDepredate(City city,Person person){
+		if(isPersonManual(person, STATUS_DEPREDATE) == true){
+			//orderConsumeMoney(city, STATUS_DEPREDATE);
+			orderConsumeThew(person, STATUS_DEPREDATE);
+			
+			Order order = new Order();
+			order.setId(STATUS_DEPREDATE);
+			order.setPerson(person);
+			order.setCity(city);
+			order.setTimeCount(0);
+			orderQueue.offer(order);
+			
+			delPerson(city, person);
+		}
 		Log.d(TAG, ""+STATUS_DEPREDATE);
 		setStatus(STATUS_NORMAL);
 	}
 	//输送
-	public boolean canTransportation(City city,Person person){
-		return true;
+	public boolean canTransportation(City city){
+		return isMoneyOrPersonEnough(city);
 	}
 	
-	public void makeTransportation(City city,Person person){
+	public void makeTransportation(City city,City cityTo,Person person){
+		//TODO 输送
+		if(isPersonManual(person, STATUS_TRANSPORTATION) == true){
+			//orderConsumeMoney(city, STATUS_DEPREDATE);
+			orderConsumeThew(person, STATUS_TRANSPORTATION);
+			
+			Order order = new Order();
+			order.setId(STATUS_TRANSPORTATION);
+			order.setPerson(person);
+			order.setCity(city);
+			order.setCityTo(cityTo);
+			order.setTimeCount(1);
+			orderQueue.offer(order);
+			
+			delPerson(city, person);
+		}
 		Log.d(TAG, ""+STATUS_TRANSPORTATION);
 		setStatus(STATUS_NORMAL);
 	}
 	
 	//离间
-	public boolean canAlienate(City city,Person person){
-		return true;
+	public boolean canAlienate(City city ){
+		return isMoneyOrPersonEnough(city);
 	}
 	
-	public void makeAlienate(City city,Person person){
+	public void makeAlienate(City city,City cityTo,Person person){
+		if(isPersonManual(person, STATUS_ALIENATE) == true){
+			orderConsumeMoney(city, STATUS_ALIENATE);
+			orderConsumeThew(person, STATUS_ALIENATE);
+			
+			Order order = new Order();
+			order.setId(STATUS_ALIENATE);
+			order.setPerson(person);
+			order.setCity(city);
+			order.setCityTo(cityTo);
+			order.setTimeCount(1);
+			orderQueue.offer(order);
+			
+			delPerson(city, person);
+		}
 		Log.d(TAG, ""+STATUS_ALIENATE);
 		setStatus(STATUS_NORMAL);
 	}
 	//招揽
-	public boolean canCanvass(City city,Person person){
-		return true;
+	public boolean canCanvass(City city){
+		return isMoneyOrPersonEnough(city);
 	}
 	
-	public void makeCanvass(City city,Person person){
-		Log.d(TAG, ""+STATUS_CANVASS);
-		setStatus(STATUS_NORMAL);
-	}
-	//策反
-	public boolean canCounterespionage(City city,Person person){
-		return true;
-	}
-	
-	public void makeCounterespionage(City city,Person person){
-		Log.d(TAG, ""+STATUS_COUNTERESPIONAGE);
-		setStatus(STATUS_NORMAL);
-	}
-	//反间
-	public boolean canRealienate(City city,Person person){
-		return true;
-	}
-	
-	public void makeRealienate(City city,Person person){
-		Log.d(TAG, ""+STATUS_REALIENATE);
-		setStatus(STATUS_NORMAL);
-	}
-	//劝降
-	public boolean canInduce(City city,Person person){
-		return true;
-	}
-	
-	public void makeInduce(City city,Person person){
-		Log.d(TAG, ""+STATUS_INDUCE);
-		setStatus(STATUS_NORMAL);
-	}
-	//朝贡
-	public boolean canTribute(City city,Person person){
-		return true;
-	}
-	
-	public void makeTribute(City city,Person person){
-		Log.d(TAG, ""+STATUS_TRIBUTE);
-		setStatus(STATUS_NORMAL);
-	}
-	
-	//招降
-	public boolean canSurrender(City city){
-		if(city.getPersonsNum() <= 0){
-			// 人手不足
-			return false;
-		}
-		if(city.getMoney() < 100){
-			// 金钱不足
-			return false;
-		}
-		return true;
-	}
-	
-	public void makeSurrender(City city,City cityTo,Person person,Person personTo){
-		if(isPersonManual(person, STATUS_SURRENDER) == true){
-			orderConsumeMoney(city, STATUS_SURRENDER);
-			orderConsumeThew(person, STATUS_SURRENDER);
+	public void makeCanvass(City city,City cityTo,Person person,Person personTo){
+		if(isPersonManual(person, STATUS_CANVASS) == true){
+			orderConsumeMoney(city, STATUS_CANVASS);
+			orderConsumeThew(person, STATUS_CANVASS);
 			
 			Order order = new Order();
-			order.setId(STATUS_SURRENDER);
+			order.setId(STATUS_CANVASS);
 			order.setPerson(person);
 			order.setCity(city);
 			order.setPersonTo(personTo);
@@ -738,63 +815,270 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 			
 			delPerson(city, person);
 		}
+		Log.d(TAG, ""+STATUS_CANVASS);
+		setStatus(STATUS_NORMAL);
+	}
+	//策反
+	public boolean canCounterespionage(City city){
+		return isMoneyOrPersonEnough(city);
+	}
+	
+	public void makeCounterespionage(City city,City cityTo,Person person,Person personTo){
+		if(isPersonManual(person, STATUS_COUNTERESPIONAGE) == true){
+			orderConsumeMoney(city, STATUS_COUNTERESPIONAGE);
+			orderConsumeThew(person, STATUS_COUNTERESPIONAGE);
+			
+			Order order = new Order();
+			order.setId(STATUS_COUNTERESPIONAGE);
+			order.setPerson(person);
+			order.setCity(city);
+			order.setPersonTo(personTo);
+			order.setCityTo(cityTo);
+			order.setTimeCount(1);
+			orderQueue.offer(order);
+			
+			delPerson(city, person);
+		}
+		Log.d(TAG, ""+STATUS_COUNTERESPIONAGE);
+		setStatus(STATUS_NORMAL);
+	}
+	//反间
+	public boolean canRealienate(City city){
+		return isMoneyOrPersonEnough(city);
+	}
+	
+	public void makeRealienate(City city,City cityTo,Person person){
+		if(isPersonManual(person, STATUS_REALIENATE) == true){
+			orderConsumeMoney(city, STATUS_REALIENATE);
+			orderConsumeThew(person, STATUS_REALIENATE);
+			
+			Order order = new Order();
+			order.setId(STATUS_REALIENATE);
+			order.setPerson(person);
+			order.setCity(city);
+			order.setCityTo(cityTo);
+			order.setTimeCount(1);
+			orderQueue.offer(order);
+			
+			delPerson(city, person);
+		}
+		Log.d(TAG, ""+STATUS_REALIENATE);
+		setStatus(STATUS_NORMAL);
+	}
+	//劝降
+	public boolean canInduce(City city){
+		return isMoneyOrPersonEnough(city);
+	}
+	
+	public void makeInduce(City city,City cityTo,Person person){
+		if(isPersonManual(person, STATUS_INDUCE) == true){
+			orderConsumeMoney(city, STATUS_INDUCE);
+			orderConsumeThew(person, STATUS_INDUCE);
+			
+			Order order = new Order();
+			order.setId(STATUS_INDUCE);
+			order.setPerson(person);
+			order.setCity(city);
+			order.setCityTo(cityTo);
+			order.setTimeCount(1);
+			orderQueue.offer(order);
+			
+			delPerson(city, person);
+		}
+		Log.d(TAG, ""+STATUS_INDUCE);
+		setStatus(STATUS_NORMAL);
+	}
+	//朝贡
+	public boolean canTribute(City city){
+		return isMoneyOrPersonEnough(city);
+	}
+	
+	public void makeTribute(City city,Person person){
+		if(isPersonManual(person, STATUS_TRIBUTE) == true){
+			orderConsumeMoney(city, STATUS_TRIBUTE);
+			orderConsumeThew(person, STATUS_TRIBUTE);
+			
+			Order order = new Order();
+			order.setId(STATUS_TRIBUTE);
+			order.setPerson(person);
+			order.setCity(city);
+			order.setTimeCount(1);
+			orderQueue.offer(order);
+			
+			delPerson(city, person);
+		}
+		Log.d(TAG, ""+STATUS_TRIBUTE);
+		setStatus(STATUS_NORMAL);
+	}
+	
+	//招降
+	public boolean canSurrender(City city){
+		//是否有俘虏
+		//return isMoneyOrPersonEnough(city);
+		return false;
+	}
+	
+	public void makeSurrender(City city,Person person,Person personTo){
+		if(isPersonManual(person, STATUS_SURRENDER) == true){
+			orderConsumeMoney(city, STATUS_SURRENDER);
+			orderConsumeThew(person, STATUS_SURRENDER);
+			
+			Order order = new Order();
+			order.setId(STATUS_SURRENDER);
+			order.setPerson(person);
+			order.setCity(city);
+			order.setPersonTo(personTo);
+			order.setTimeCount(0);
+			orderQueue.offer(order);
+			
+			delPerson(city, person);
+		}
 		Log.d(TAG, ""+STATUS_SURRENDER);
 		setStatus(STATUS_NORMAL);
 	}
 	//处斩
-	public boolean canKill(City city,Person person){
-		return true;
+	public boolean canKill(City city){
+		//是否有俘虏
+		return false;
 	}
 	
-	public void makeKill(City city,Person person){
+	public void makeKill(City city,Person person,Person personTo){
+		if(isPersonManual(person, STATUS_KILL) == true){
+			//orderConsumeMoney(city, STATUS_KILL);
+			orderConsumeThew(person, STATUS_KILL);
+			
+			Order order = new Order();
+			order.setId(STATUS_KILL);
+			order.setPerson(person);
+			order.setCity(city);
+			order.setPersonTo(personTo);
+			order.setTimeCount(0);
+			orderQueue.offer(order);
+			
+			delPerson(city, person);
+		}
 		Log.d(TAG, ""+STATUS_KILL);
 		setStatus(STATUS_NORMAL);
 	}
 	//流放
-	public boolean canBanish(City city,Person person){
-		return true;
+	public boolean canBanish(City city){
+		//是否有俘虏
+		return false;
 	}
 	
-	public void makeBanish(City city,Person person){
+	public void makeBanish(City city,Person person,Person personTo){
+		if(isPersonManual(person, STATUS_BANISH) == true){
+			//orderConsumeMoney(city, STATUS_BANISH);
+			orderConsumeThew(person, STATUS_BANISH);
+			
+			Order order = new Order();
+			order.setId(STATUS_BANISH);
+			order.setPerson(person);
+			order.setCity(city);
+			order.setPersonTo(personTo);
+			order.setTimeCount(0);
+			orderQueue.offer(order);
+			
+			delPerson(city, person);
+		}
 		Log.d(TAG, ""+STATUS_BANISH);
 		setStatus(STATUS_NORMAL);
 	}
 	//移动
-	public boolean canMove(City city,Person person){
-		return true;
+	public boolean canMove(City city){
+		//isPersonEnough?
+		return false;
 	}
 	
-	public void makeMove(City city,Person person){
+	public void makeMove(City city,City cityTo,Person person){
+		if(isPersonManual(person, STATUS_MOVE) == true){
+			//orderConsumeMoney(city, STATUS_BANISH);
+			orderConsumeThew(person, STATUS_MOVE);
+			
+			Order order = new Order();
+			order.setId(STATUS_MOVE);
+			order.setPerson(person);
+			order.setCity(city);
+			order.setCityTo(cityTo);
+			order.setTimeCount(1);
+			orderQueue.offer(order);
+			
+			delPerson(city, person);
+		}
 		Log.d(TAG, ""+STATUS_MOVE);
 		setStatus(STATUS_NORMAL);
 	}
 	
 	//赏赐
-	public boolean canLargess(City city,Person person){
-		return true;
+	public boolean canLargess(City city){
+		return isMoneyOrPersonEnough(city);
 	}
 	
 	public void makeLargess(City city,Person person){
+		if(isPersonManual(person, STATUS_LARGESS) == true){
+			orderConsumeMoney(city, STATUS_LARGESS);
+			orderConsumeThew(person, STATUS_LARGESS);
+			
+			Order order = new Order();
+			order.setId(STATUS_LARGESS);
+			order.setPerson(person);
+			order.setCity(city);
+			order.setTimeCount(1);
+			orderQueue.offer(order);
+			
+			delPerson(city, person);
+		}
 		Log.d(TAG, ""+STATUS_LARGESS);
 		setStatus(STATUS_NORMAL);
 	}
 	//没收
-	public boolean canConfiscate(City city,Person person){
-		return true;
+	public boolean canConfiscate(City city){
+		//是否有宝物
+		return false;
 	}
 	
 	public void makeConfiscate(City city,Person person){
+		if(isPersonManual(person, STATUS_CONFISCATE) == true){
+			orderConsumeMoney(city, STATUS_CONFISCATE);
+			orderConsumeThew(person, STATUS_CONFISCATE);
+			
+			Order order = new Order();
+			order.setId(STATUS_CONFISCATE);
+			order.setPerson(person);
+			order.setCity(city);
+			order.setTimeCount(0);
+			orderQueue.offer(order);
+			
+			delPerson(city, person);
+		}
 		Log.d(TAG, ""+STATUS_CONFISCATE);
 		setStatus(STATUS_NORMAL);
 	}
 	//宴请
-	public boolean canTreat(City city,Person person){
-		return true;
+	public boolean canTreat(City city){
+		
+		return isMoneyOrPersonEnough(city);
 	}
 	
-	public void makeTreat(City city,Person person){
+	public void makeTreat(City city){
+		
+		orderConsumeMoney(city, STATUS_TREAT);
+		
+		Order order = new Order();
+		order.setId(STATUS_TREAT);
+		order.setCity(city);
+		order.setTimeCount(0);
+		orderQueue.offer(order);			
 		Log.d(TAG, ""+STATUS_TREAT);
 		setStatus(STATUS_NORMAL);
+	}
+	
+	public ArrayList<City> getGCities(){
+		ArrayList<City> cities = new ArrayList<City>();
+		for(int i:gCities.keySet()){
+			cities.add(gCities.get(i));
+		}
+		return cities;
 	}
 	
 	public ArrayList<Person> getGPersons(){
@@ -840,6 +1124,11 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 		return status;
 	}
 
+	public void alert(String message){
+		PlainAlert alert = new PlainAlert(this, message, dialogBack, dialogButton);
+		currentGameAlert = alert;
+	}
+	
 	//刷新帧线程
 	class DrawThread extends Thread{
 

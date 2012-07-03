@@ -9,7 +9,7 @@ public class Constant {
 	 * MapView 使用常量
 	 */
 
-	public static final int mapStartX = 380;
+	public static final int mapStartX = 10;
 	public static final int mapStartY = 20;
 	
 	/**

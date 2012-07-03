@@ -14,7 +14,9 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.MotionEvent;
 
-public class PersonView {
+
+//其实就是PersonView，如果放在personView中需要添加status，看起来复杂，先这样，以后再改回去
+public class EnemyView {
 	GameView gameView;
 	private int statusReturn = 0;
 	public void setStatusReturn(int statusReturn) {
@@ -59,7 +61,7 @@ public class PersonView {
 	}
 
 
-	public PersonView(GameView gameView,ArrayList<Person> personsOnShow) {
+	public EnemyView(GameView gameView,ArrayList<Person> personsOnShow) {
 		this.gameView = gameView;
 		this.personsInCity = personsOnShow;
 		paint = new Paint();
@@ -87,7 +89,7 @@ public class PersonView {
 		canvas.drawBitmap(threeBitmap, threeBitmapX, threeBitmapY, paint);
 		//canvas.drawBitmap(logo, 15, 16, paint);//绘制logo
 		paint.setTextSize(23);//设置文字大小
-		canvas.drawText("武将情报", personTitleX, personTitleY, paint);
+		canvas.drawText("敌方武将", personTitleX, personTitleY, paint);
 		paint.setTextSize(18);//设置文字大小
 		
 		canvas.drawBitmap(menuTitle, 10, attrStartY-30, paint);
@@ -256,10 +258,15 @@ public class PersonView {
 				if(personsInCity==null || personsInCity.size() == 0){
 					return true;
 				}
-				gameView.gPersonSel = personsInCity.get(currentI + selectI);
+				
+				//*************************************
+				gameView.gPersonSelToDo = personsInCity.get(currentI + selectI);
 				this.selectI = 0;
 				this.currentI = 0;
-				gameView.setStatus(statusReturn);
+				City city = gameView.gCities.get(gameView.gCitySet.getId());
+				ArrayList<Person> personsInAlienCity = city.getPersonQueue();
+				gameView.toPersonView(statusReturn, personsInAlienCity);
+				//************************************
 			}
 			//向下翻页按钮
 			if(new Rect(threeBitmapX,threeBitmapY,threeBitmapX + smallBtnWidth
@@ -307,7 +314,7 @@ public class PersonView {
 			{
 				this.selectI = 0;
 				this.currentI = 0;
-				gameView.setStatus(gameView.STATUS_NORMAL);
+				gameView.setStatus(GameView.STATUS_NORMAL);
 			}
 		}
 		return true;

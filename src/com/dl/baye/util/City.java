@@ -125,7 +125,7 @@ public class City {
 	}
 
 	public int getPersonsNum() {
-		return personsNum;
+		return personQueue.size();
 	}
 
 	public void setPersonsNum(int personsNum) {
@@ -141,7 +141,7 @@ public class City {
 	}
 
 	public int getToolsNum() {
-		return toolsNum;
+		return toolQueue.size();
 	}
 
 	public void setToolsNum(int toolsNum) {

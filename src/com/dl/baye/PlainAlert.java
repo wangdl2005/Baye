@@ -22,7 +22,7 @@ public class PlainAlert extends GameAlert {
 		if(event.getAction() == MotionEvent.ACTION_DOWN){
 			if(x>DIALOG_BTN_START_X && x<DIALOG_BTN_START_X+DIALOG_BTN_WIDTH
 					&& y>DIALOG_BTN_START_Y && y<DIALOG_BTN_START_Y+DIALOG_BTN_HEIGHT){//点下的是确定键
-				gameView.setStatus(0);					//设置游戏状态为0(待命态)	
+				gameView.setStatus(GameView.STATUS_NORMAL);					//设置游戏状态为0(待命态)	
 				gameView.setOnTouchListener(gameView);	//将监听器重新设置为GameView
 				gameView.setCurrentGameAlert(null);		//置空当前游戏提示
 			}			

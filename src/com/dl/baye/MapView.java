@@ -28,6 +28,7 @@ public class MapView{
 	static Bitmap bmpBtnBack;
 	static Bitmap bmpMap;
 	static Bitmap bmpBtnSelected;
+	static Bitmap dialogBack;
 	
 	static final int btnOKX = 660;
 	static final int btnOKY = 430;
@@ -42,6 +43,13 @@ public class MapView{
 	static final int infoHeight = 30;
 	static final int mapWidth = 400;
 	static final int mapHeight = 400;
+	
+	static final int messageSize = 11;
+	static final int messageLine = 20;
+	static final int messageStartX = 450;
+	static final int messageStartY = 289;
+	static final int messageWidth  = 330;
+	static final int messageHeight = 121;
 
 	//menu 0:无子菜单;1-6：内政、军事、外交、人才、君主、信息的子菜单
 	static int menuPos = 0;
@@ -62,6 +70,8 @@ public class MapView{
 	Rect rChild_6 = new Rect();
 	Rect rChild_7 = new Rect();
 	Rect rMap = new Rect();
+	
+	Rect rMessage = new Rect();
 	
 	public MapView(GameView gv) {
 		this.gameView = gv;
@@ -368,22 +378,31 @@ public class MapView{
 	}
 
 	protected void onDraw(Canvas canvas) {
-		canvas.drawColor(Color.WHITE);
+		
+		canvas.drawColor(Color.rgb(179, 155, 106));
 		drawMap(canvas);
 		if(status == STATUS_NORMAL){
+			//绘制Message
+			canvas.drawBitmap(dialogBack,null,rMessage,null);
+			Paint txtPaint = new Paint();
+			txtPaint.setColor(Color.BLACK);
+			txtPaint.setAntiAlias(true);//抗锯齿
+			txtPaint.setTextSize(messageSize);
+			
+			//绘制结束回合Button
+			canvas.drawBitmap(bmpBtnBack,null,new Rect(btnOKX , btnOKY, btnOKX + btnWidth * 2,btnOKY + btnHeight),null);
+			Paint paint = new Paint();
+			paint.setARGB(255, 42, 48, 103);//设置字体颜色
+			paint.setAntiAlias(true);//抗锯齿
+			paint.setTextSize(18);
+			canvas.drawText("结束回合", btnOKX + 30, btnOKY + 20, paint);
+			
 			if(gameView.gCitySet != null){
 				//draw CityInfo
 				drawCityInfo(canvas,gameView.gCitySet);
 				
 				createMenu(canvas, menuPos);		
 				
-				//绘制结束回合Button
-				canvas.drawBitmap(bmpBtnBack,null,new Rect(btnOKX , btnOKY, btnOKX + btnWidth * 2,btnOKY + btnHeight),null);
-				Paint paint = new Paint();
-				paint.setARGB(255, 42, 48, 103);//设置字体颜色
-				paint.setAntiAlias(true);//抗锯齿
-				paint.setTextSize(18);
-				canvas.drawText("结束回合", btnOKX + 30, btnOKY + 20, paint);
 			}
 		}
 		if(status == STATUS_PICK_CITY )
@@ -407,6 +426,7 @@ public class MapView{
 		bmpMap =  BitmapFactory.decodeResource(r, R.drawable.map192);
 		bmpBtnBack = BitmapFactory.decodeResource(r, R.drawable.btn_back);
 		bmpBtnSelected = BitmapFactory.decodeResource(r, R.drawable.btn_selected);		
+		dialogBack = BitmapFactory.decodeResource(r, R.drawable.dialog_back);		
 	}
 	
 	public void initRect(){
@@ -427,11 +447,13 @@ public class MapView{
 		
 		rMap = new Rect(mapStartX, mapStartY, mapStartX + mapWidth, mapStartY + mapHeight);
 		
-
+		rMessage = new Rect(messageStartX,messageStartY
+				,messageStartX + messageWidth,messageStartY+messageHeight);
 	}
 	
 	public void drawMap(Canvas canvas){
 		//draw map
+		canvas.drawBitmap(dialogBack,null,new Rect( rMap.left-2,rMap.top-2,rMap.right+2,rMap.bottom+2), null);
 		canvas.drawBitmap(bmpMap, null, rMap, null);
 		//draw cities
 		Paint paint = new Paint();						//创建画笔对象

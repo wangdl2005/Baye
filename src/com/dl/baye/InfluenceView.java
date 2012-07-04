@@ -89,23 +89,23 @@ public class InfluenceView {
 		attrX += attrWidth * coefficient;
 		canvas.drawText("君主", attrX, attrStartY-10, paint);
 		attrX += attrWidth * coefficient;
-		canvas.drawText("城市", attrX , attrStartY-10, paint);
+		canvas.drawText("总城市", attrX , attrStartY-10, paint);
 		attrX += attrWidth*coefficient;
-		canvas.drawText("武将", attrX ,attrStartY-10, paint);
+		canvas.drawText("总武将", attrX ,attrStartY-10, paint);
 		attrX += attrWidth*coefficient;
-		canvas.drawText("道具", attrX, attrStartY-10, paint);
+		canvas.drawText("总道具", attrX, attrStartY-10, paint);
 		attrX += attrWidth*coefficient;
-		canvas.drawText("农业", attrX, attrStartY-10, paint);
+		canvas.drawText("总农业", attrX, attrStartY-10, paint);
 		attrX += attrWidth*coefficient;
-		canvas.drawText("商业", attrX, attrStartY-10, paint);
+		canvas.drawText("总商业", attrX, attrStartY-10, paint);
 		attrX += attrWidth*coefficient;
-		canvas.drawText("人口", attrX, attrStartY-10, paint);
+		canvas.drawText("总人口", attrX, attrStartY-10, paint);
 		attrX += attrWidth*coefficient;
-		canvas.drawText("金钱", attrX, attrStartY-10, paint);
+		canvas.drawText("总金钱", attrX, attrStartY-10, paint);
 		attrX += attrWidth*coefficient;
-		canvas.drawText("粮食", attrX, attrStartY-10, paint);
+		canvas.drawText("总粮食", attrX, attrStartY-10, paint);
 		attrX += attrWidth*coefficient;
-		canvas.drawText("兵力", attrX, attrStartY-10, paint);
+		canvas.drawText("总兵力", attrX, attrStartY-10, paint);
 		int tempCurrentI = currentI;
 		paint.setTextSize(16);//设置文字大小
 
@@ -120,7 +120,7 @@ public class InfluenceView {
 					int totalCommerce = influ.getCommerce();
 					int totalPopulation = influ.getPopulation();
 					int totalMoney = influ.getMoney();
-					int totalFood = influ.getMoney();
+					int totalFood = influ.getFood();
 					int totalArmsNum = influ.getMothballArmsNum();
 					int totalPersonNum = influ.getPersonsNum();
 					int totalToolsNum = influ.getToolsNum();
@@ -160,7 +160,7 @@ public class InfluenceView {
 					int totalCommerce = influ.getCommerce();
 					int totalPopulation = influ.getPopulation();
 					int totalMoney = influ.getMoney();
-					int totalFood = influ.getMoney();
+					int totalFood = influ.getFood();
 					int totalArmsNum = influ.getMothballArmsNum();
 					int totalPersonNum = influ.getPersonsNum();
 					int totalToolsNum = influ.getToolsNum();

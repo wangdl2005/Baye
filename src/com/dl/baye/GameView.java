@@ -674,7 +674,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 			//orderConsumeMoney(city, STATUS_BATTLE);
 			orderConsumeThew(person, STATUS_BATTLE);
 			//food --
-			city.setFood(city.getFood() - 300);
+			city.minFood(300);
 			
 			Order order = new Order();
 			order.setId(STATUS_BATTLE);
@@ -756,7 +756,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	public void makeTransportation(City city,City cityTo,Person person){
 		//TODO 输送
 		if(isPersonManual(person, STATUS_TRANSPORTATION) == true){
-			//orderConsumeMoney(city, STATUS_DEPREDATE);
+			orderConsumeMoney(city, STATUS_DEPREDATE);
 			orderConsumeThew(person, STATUS_TRANSPORTATION);
 			
 			Order order = new Order();
@@ -1158,13 +1158,17 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 		city.getPersonQueue().remove(person);
 	}
 	
+	public void addPerson(City city,Person person){
+		city.getPersonQueue().add(person);
+	}
+	
 	public void orderConsumeMoney(City city,int orderId){
 		switch(orderId){
 		case STATUS_ASSART:
-			city.setMoney(city.getMoney() - 100);
+			city.minMoney(100);
 			break;
 		default:
-			city.setMoney(city.getMoney() - 100);
+			city.minMoney(100);
 			break;
 		}
 	}

@@ -39,9 +39,16 @@ public class City {
 	public int getFarming() {
 		return farming;
 	}
-
-	public void setFarming(int farming) {
-		this.farming = farming;
+	
+	public void addFarming(int add){
+		farming += add;
+		if(farming > farmingLimit)
+			farming = farmingLimit;
+	}
+	public void minFarming(int min){
+		farming -= min;
+		if(farming <0)
+			farming = 0;
 	}
 
 	public int getCommerceLimit() {
@@ -56,24 +63,51 @@ public class City {
 		return commerce;
 	}
 
-	public void setCommerce(int commerce) {
-		this.commerce = commerce;
+	public void addCommerce(int add) {
+		this.commerce += add;
+		if(commerce > commerceLimit){
+			commerce = commerceLimit;
+		}
+	}
+	public void minCommerce(int min) {
+		this.commerce -= min;
+		if(commerce <0){
+			commerce = 0;
+		}
 	}
 
 	public int getPeopleDevotion() {
 		return peopleDevotion;
 	}
 
-	public void setPeopleDevotion(int peopleDevotion) {
-		this.peopleDevotion = peopleDevotion;
+	public void addPeopleDevotion(int add) {
+		this.peopleDevotion += add;
+		if(peopleDevotion > 100){
+			peopleDevotion = 100;
+		}
+	}
+	public void minPeopleDevotion(int min) {
+		this.peopleDevotion -= min;
+		if(peopleDevotion < 0){
+			peopleDevotion = 0;
+		}
 	}
 
 	public int getAvoidCalamity() {
 		return avoidCalamity;
 	}
 
-	public void setAvoidCalamity(int avoidCalamity) {
-		this.avoidCalamity = avoidCalamity;
+	public void addAvoidCalamity(int add) {
+		this.avoidCalamity += add;
+		if(avoidCalamity > 100){
+			avoidCalamity = 100;
+		}
+	}
+	public void minAvoidCalamity(int min) {
+		this.avoidCalamity -= min;
+		if(avoidCalamity <0){
+			avoidCalamity = 0;
+		}
 	}
 
 	public int getPopulationLimit() {
@@ -88,32 +122,67 @@ public class City {
 		return population;
 	}
 
-	public void setPopulation(int population) {
-		this.population = population;
+	public void addPopulation(int add) {
+		this.population += add;
+		if(population > populationLimit){
+			population = populationLimit;
+		}
+	}
+	public void minPopulation(int min) {
+		this.population -= min;
+		if(population <0){
+			population = 0;
+		}
 	}
 
 	public int getMoney() {
 		return money;
 	}
 
-	public void setMoney(int money) {
-		this.money = money;
+	public void addMoney(int add){
+		this.money += add;
+		if(money > 100000){
+			money = 100000;
+		}
+	}
+	public void minMoney(int min){
+		this.money -= min;
+		if(money < 0){
+			money = 0;
+		}
 	}
 
 	public int getFood() {
 		return food;
 	}
-
-	public void setFood(int food) {
-		this.food = food;
-	}
+	public void addFood(int add) {
+		this.food+= add;
+		if(this.food > 100000){
+			this.food = 100000;
+		}
+	} 
+	public void minFood(int min) {
+		this.food-= min;
+		if(this.food <0){
+			this.food = 0;
+		}
+	} 
 
 	public int getMothballArmsNum() {
 		return mothballArmsNum;
 	}
 
-	public void setMothballArmsNum(int mothballArmsNum) {
-		this.mothballArmsNum = mothballArmsNum;
+	public void addMothballArmsNum(int add) {
+		this.mothballArmsNum += add;
+		if(this.mothballArmsNum > 100000){
+			this.mothballArmsNum = 100000;
+		}
+	}
+	public void minMothballArmsNum(int min) {
+		this.mothballArmsNum -= min;
+		if(this.mothballArmsNum <0){
+			this.mothballArmsNum = 0;
+		}
 	}
 
 	public ArrayList<Person> getPersonQueue() {

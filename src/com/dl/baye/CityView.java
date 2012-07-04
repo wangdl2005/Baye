@@ -83,8 +83,6 @@ public class CityView {
 		
 		canvas.drawBitmap(menuTitle, 10, attrStartY-30, paint);
 		int attrX = attrStartX;
-		canvas.drawText("序号", attrX, attrStartY-10, paint);
-		attrX += attrWidth;
 		canvas.drawText("编号", attrX, attrStartY-10, paint);
 		attrX += attrWidth;
 		canvas.drawText("城市", attrX, attrStartY-10, paint);
@@ -141,8 +139,6 @@ public class CityView {
 					int toolsNum = city.getToolsNum();
 					
 					attrX = attrStartX;
-					canvas.drawText("  " + i, attrX, attrStartY + 35 + 30*i, paint);
-					attrX += attrWidth;
 					canvas.drawText(" "+id, attrX, attrStartY + 35 + 30*i, paint);
 					attrX += attrWidth;
 					canvas.drawText(name, attrX , attrStartY + 35 + 30*i, paint);
@@ -196,8 +192,6 @@ public class CityView {
 					int personsNum = city.getPersonsNum();
 					int toolsNum = city.getToolsNum();
 					attrX = attrStartX;	
-					canvas.drawText("  " + i, attrX, attrStartY + 35 + 30*(i-currentI), paint);
-					attrX += attrWidth;
 					canvas.drawText(" "+id, attrX, attrStartY + 35 + 30*(i-currentI), paint);
 					attrX += attrWidth;
 					canvas.drawText(name, attrX , attrStartY + 35 + 30*(i-currentI), paint);
@@ -307,7 +301,7 @@ public class CityView {
 			{
 				this.selectI = 0;
 				this.currentI = 0;
-				gameView.setStatus(gameView.STATUS_NORMAL);
+				gameView.setStatus(GameView.STATUS_NORMAL);
 			}
 		}
 		return true;

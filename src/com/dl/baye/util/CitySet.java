@@ -23,6 +23,15 @@ public class CitySet {
 	//城市ID
 	int id;
 	
+	public boolean compareTo(CitySet citySet){
+//		boolean flag = true;
+//		if(this.selX != citySet.selX || this.selY != citySet.selY){
+//			flag = false;
+//		}		
+//		return flag;
+		return (this.selX == citySet.selX && this.selY == citySet.selY);
+	}
+	
 	public int getId() {
 		return id;
 	}

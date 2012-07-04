@@ -27,12 +27,15 @@ public abstract class GameAlert implements OnTouchListener{
 		int lines = string.length()/DIALOG_WORD_EACH_LINE+(string.length()%DIALOG_WORD_EACH_LINE==0?0:1);//求出需要画几行文字
 		for(int i=0;i<lines;i++){
 			String str="";
+			int j = 0;//用于使字居中
 			if(i == lines-1){//如果是最后一行那个不太整的汉字
 				str = string.substring(i*DIALOG_WORD_EACH_LINE);
+				j = str.length()/2;
+				canvas.drawText(str, DIALOG_WORD_START_X +DIALOG_WORD_SIZE*(DIALOG_WORD_EACH_LINE/2-j) , DIALOG_WORD_START_Y+DIALOG_WORD_SIZE*i, paint);
 			}else{
 				str = string.substring(i*DIALOG_WORD_EACH_LINE, (i+1)*DIALOG_WORD_EACH_LINE);
+				canvas.drawText(str, DIALOG_WORD_START_X, DIALOG_WORD_START_Y+DIALOG_WORD_SIZE*i, paint);
 			}
-			canvas.drawText(str, DIALOG_WORD_START_X, DIALOG_WORD_START_Y+DIALOG_WORD_SIZE*i, paint);
 		}
 	}
 }

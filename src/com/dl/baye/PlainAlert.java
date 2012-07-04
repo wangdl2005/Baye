@@ -10,9 +10,11 @@ import android.view.View;
 //只有一个确定按钮的alert
 public class PlainAlert extends GameAlert {
 	String alertMessage;
-	public PlainAlert(GameView gv,String alertMessage, Bitmap bmpBack, Bitmap bmpButton) {
+	private int statusReturn;
+	public PlainAlert(GameView gv,String alertMessage, Bitmap bmpBack, Bitmap bmpButton,int statusReturn) {
 		super(gv, bmpBack, bmpButton);
 		this.alertMessage = alertMessage;
+		this.statusReturn = statusReturn;
 	}
 
 	@Override
@@ -22,7 +24,7 @@ public class PlainAlert extends GameAlert {
 		if(event.getAction() == MotionEvent.ACTION_DOWN){
 			if(x>DIALOG_BTN_START_X && x<DIALOG_BTN_START_X+DIALOG_BTN_WIDTH
 					&& y>DIALOG_BTN_START_Y && y<DIALOG_BTN_START_Y+DIALOG_BTN_HEIGHT){//点下的是确定键
-				gameView.setStatus(GameView.STATUS_NORMAL);					//设置游戏状态为0(待命态)	
+				gameView.setStatus(statusReturn);					//设置游戏状态为0(待命态)	
 				gameView.setOnTouchListener(gameView);	//将监听器重新设置为GameView
 				gameView.setCurrentGameAlert(null);		//置空当前游戏提示
 			}			

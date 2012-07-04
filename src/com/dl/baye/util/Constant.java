@@ -39,9 +39,9 @@ public class Constant {
 	//对话框中的文字大小如果为16，那么开始x坐标为24，1行的汉字数为17
 	//对话框中的文字大小如果为18，那么开始x坐标为24 ，1行的汉字数为15
 	public static final int DIALOG_WORD_SIZE = 16;//对话框中文字的大小
-	public static final int DIALOG_WORD_START_X = 360;//对话框中文字开始的x坐标
+	public static final int DIALOG_WORD_START_X = 270;//对话框中文字开始的x坐标
 	public static final int DIALOG_WORD_START_Y = 350;//对话框文字开始的y坐标
-	public static final int DIALOG_WORD_EACH_LINE = 17;//对话框每行的文字个数
+	public static final int DIALOG_WORD_EACH_LINE = 16;//对话框每行的文字个数
 	public static final int DIALOG_BTN_START_X = 370;//对话框中按钮的开始x坐标
 	public static final int DIALOG_BTN_START_Y = 360;//对话框中按钮的开始y坐标
 	public static final int DIALOG_BTN_WIDTH = 60;//对话框中按钮的宽度

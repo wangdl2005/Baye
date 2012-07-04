@@ -9,6 +9,7 @@ import java.util.Queue;
 import com.dl.baye.util.City;
 import com.dl.baye.util.CitySet;
 import com.dl.baye.util.Goods;
+import com.dl.baye.util.Influence;
 import com.dl.baye.util.Order;
 import com.dl.baye.util.Person;
 
@@ -421,6 +422,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	//获取君主列表
 	public void initPeriodKings(){
 		this.gKings.add(0x00);
+		this.gKings.add(0x01);
 	}
 	//获得玩家君主
 	public void getPlayerKing(int idx){
@@ -430,7 +432,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	public void initCityList(){
 		ArrayList<Person> personsTemp = new ArrayList<Person>();
 		personsTemp.add(gPersons.get(0));
-		personsTemp.add(gPersons.get(1));
+		personsTemp.add(gPersons.get(2));
 		personsTemp.add(gPersons.get(3));
 		personsTemp.add(gPersons.get(4));
 		ArrayList<Goods> goodsTmep = new ArrayList<Goods>();
@@ -440,13 +442,13 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 		this.rCities.put(1, new CitySet(110,75));
 		
 		personsTemp = new ArrayList<Person>();
-		personsTemp.add(gPersons.get(2));
+		personsTemp.add(gPersons.get(1));
 		personsTemp.add(gPersons.get(5));
 		personsTemp.add(gPersons.get(6));
 		personsTemp.add(gPersons.get(7));
 		goodsTmep = new ArrayList<Goods>();
 		goodsTmep.add(gGoods.get(1));
-		this.gCities.put(2, new City(2, 2, 2, 5000, 1000, 5000, 1000, 80, 50
+		this.gCities.put(2, new City(2, 1, 2, 5000, 1000, 5000, 1000, 80, 50
 				, 10000, 3000, 1000, 1000, 1000, personsTemp, 1, goodsTmep, 1, "长安", null, null));
 		this.rCities.put(2, new CitySet(160,140));
 	}
@@ -482,13 +484,13 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	}
 	public void toGoodsView(ArrayList<Goods> tools){
 		if(goodsView == null){
-//			goodsView = new GoodsView(this,tools);
+			goodsView = new GoodsView(this,tools);
 		}
 		setStatus(STATUS_GOODSVIEW);
 	}
-	public void toInfluenceView(ArrayList<City> citys){
+	public void toInfluenceView(ArrayList<Influence> influences){
 		if(influenceView == null){
-//			influenceView = new InfluenceView(this,citys);
+			influenceView = new InfluenceView(this,influences);
 		}
 		setStatus(STATUS_INFLUENCEVIEW);
 	}
@@ -505,12 +507,12 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	private boolean isMoneyOrPersonEnough(City city) {
 		if(city.getMoney() < 100){
 			// 金钱不足
-			alert("金钱不足");
+			alert("金钱不足",STATUS_NORMAL);
 			return false;
 		}
 		if(city.getPersonsNum() <= 0){
 			// 人手不足
-			alert("人手不足");
+			alert("人手不足",STATUS_NORMAL);
 			return false;
 		}
 		return true;
@@ -662,7 +664,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	public boolean canBattle(City city){
 		if(city.getFood() < 1000){
 			//
-			alert("粮食不够");
+			alert("粮食不够",STATUS_NORMAL);
 		}
 		return isMoneyOrPersonEnough(city);
 	}
@@ -713,7 +715,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	//分配
 	public boolean canDistribute(City city){
 		if(city.getMothballArmsNum() < 100){
-			alert("兵力不足");
+			alert("兵力不足",STATUS_NORMAL);
 			return false;
 		}
 		return true;
@@ -915,6 +917,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	public boolean canSurrender(City city){
 		//是否有俘虏
 		//return isMoneyOrPersonEnough(city);
+		alert("没有俘虏",STATUS_NORMAL);
 		return false;
 	}
 	
@@ -939,6 +942,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	//处斩
 	public boolean canKill(City city){
 		//是否有俘虏
+		alert("没有俘虏",STATUS_NORMAL);
 		return false;
 	}
 	
@@ -963,6 +967,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	//流放
 	public boolean canBanish(City city){
 		//是否有俘虏
+		alert("没有俘虏",STATUS_NORMAL);
 		return false;
 	}
 	
@@ -986,8 +991,12 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	}
 	//移动
 	public boolean canMove(City city){
-		//isPersonEnough?
-		return false;
+		if(city.getPersonsNum() <= 0){
+			// 人手不足
+			alert("人手不足",STATUS_NORMAL);
+			return false;
+		}
+		return true;
 	}
 	
 	public void makeMove(City city,City cityTo,Person person){
@@ -1047,8 +1056,8 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 			order.setPerson(person);
 			order.setCity(city);
 			order.setTimeCount(0);
-			orderQueue.offer(order);
-			
+			orderQueue.offer(order);		
+
 			delPerson(city, person);
 		}
 		Log.d(TAG, ""+STATUS_CONFISCATE);
@@ -1073,6 +1082,10 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 		setStatus(STATUS_NORMAL);
 	}
 	
+	public ArrayList<Integer> getGKings(){
+		return gKings;
+	}
+	
 	public ArrayList<City> getGCities(){
 		ArrayList<City> cities = new ArrayList<City>();
 		for(int i:gCities.keySet()){
@@ -1089,7 +1102,59 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 		return persons;
 	}
 	
+	public ArrayList<Goods> getGGoods(){
+		ArrayList<Goods> goods = new ArrayList<Goods>();
+		for(int i : gGoods.keySet()){
+			goods.add(gGoods.get(i));
+		}
+		return goods;
+	}
+	
+	public ArrayList<Influence> getGInfluence(){
+		ArrayList<Influence> influences = new ArrayList<Influence>();
+		for(int i:getGKings()){
+			String belong = "";
+			int totalFarming = 0;
+			int totalCommerce = 0;
+			int totalPopulatin = 0;
+			int totalMoney = 0;
+			int totalFood = 0;
+			int totalArmsNum = 0;
+			int totalPersonNum = 0;
+			int totalToolsNum = 0;
+			int cityNum = 0;
+			for(City c:getGCities()){
+				if(c.getBelong() == i){
+					belong = gPersons.get(i).getName();
+					++cityNum;
+					totalFarming += c.getFarming();
+					totalCommerce += c.getCommerce();
+					totalPopulatin += c.getPopulation();
+					totalMoney += c.getMoney();
+					totalFood += c.getFood();
+					totalArmsNum += c.getMothballArmsNum();
+					totalPersonNum += c.getPersonsNum();
+					totalToolsNum += c.getToolsNum();
+				}
+			}
+			if(belong != ""){
+				Influence influ = new Influence(belong, cityNum,totalFarming, totalCommerce, totalPopulatin
+						, totalMoney, totalFood, totalArmsNum, totalPersonNum, totalToolsNum);
+				influences.add(influ);
+			}
+		}
+		return influences;
+	}
+	
 	public void delPerson(City city,Person person){
+		setStatus(STATUS_NORMAL);
+		try{
+			//延时，使界面更换主界面，防止出现personQueue 数组越界
+			Thread.sleep(300);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		city.getPersonQueue().remove(person);
 	}
 	
@@ -1124,8 +1189,8 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 		return status;
 	}
 
-	public void alert(String message){
-		PlainAlert alert = new PlainAlert(this, message, dialogBack, dialogButton);
+	public void alert(String message,int statusReturn){
+		PlainAlert alert = new PlainAlert(this, message, dialogBack, dialogButton,statusReturn);
 		currentGameAlert = alert;
 	}
 	

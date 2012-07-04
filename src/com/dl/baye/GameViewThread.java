@@ -104,70 +104,85 @@ public class GameViewThread extends Thread {
 				break;
 			case GameView.STATUS_BATTLE:
 				gv.makeBattle(city,cityToDo, gv.gPersonSel);
+				resetVar();
 				break;
 			case GameView.STATUS_CONSCRIPTION:
 				gv.makeConscriotion(city, gv.gPersonSel);
+				resetVar();
 				break;
 			case GameView.STATUS_DISTRIBUTE:
 				//gv.makeDistribute(city,gv.gPersonSel);
 				break;
 			case GameView.STATUS_DEPREDATE:
 				gv.makeDepredate(city,gv.gPersonSel);
+				resetVar();
 				break;
 			case GameView.STATUS_TRANSPORTATION:
 				gv.makeTransportation(city,cityToDo,gv.gPersonSel);
+				resetVar();
 				break;
 				
 			case GameView.STATUS_ALIENATE:
 				gv.makeAlienate(city,cityToDo,gv.gPersonSel);
+				resetVar();
 				break;
 			case GameView.STATUS_CANVASS:
 				gv.makeCanvass(city,cityToDo,gv.gPersonSel,gv.gPersonSelToDo);
+				resetVar();
 				break;
 			case GameView.STATUS_COUNTERESPIONAGE:
 				gv.makeCounterespionage(city,cityToDo,gv.gPersonSel,gv.gPersonSelToDo);
+				resetVar();
 				break;
 			case GameView.STATUS_REALIENATE:
 				gv.makeRealienate(city,cityToDo,gv.gPersonSel);
+				resetVar();
 				break;
 			case GameView.STATUS_INDUCE:
 				gv.makeInduce(city,cityToDo,gv.gPersonSel);
+				resetVar();
 				break;
 			case GameView.STATUS_TRIBUTE:
 				gv.makeTribute(city,gv.gPersonSel);
+				resetVar();
 				break;
 				
 			case GameView.STATUS_SURRENDER:
 				gv.makeSurrender(city, gv.gPersonSel, gv.gPersonSelToDo);
+				resetVar();
 				break;
 			case GameView.STATUS_KILL:
 				gv.makeKill(city, gv.gPersonSel, gv.gPersonSelToDo);
+				resetVar();
 				break;
 			case GameView.STATUS_BANISH:
 				gv.makeBanish(city, gv.gPersonSel, gv.gPersonSelToDo);
+				resetVar();
 				break;
 			case GameView.STATUS_MOVE:
 				gv.makeMove(city,cityToDo,gv.gPersonSel);
+				resetVar();
 				break;
 				
 			case GameView.STATUS_LARGESS:
 				gv.makeLargess(city,gv.gPersonSel);
+				resetVar();
 				break;
 			case GameView.STATUS_CONFISCATE:
 				gv.makeConfiscate(city,gv.gPersonSel);
+				resetVar();
 				break;
 			case GameView.STATUS_TREAT:
 				gv.makeTreat(city);
+				resetVar();
 				break;	
 			}		
-
-			//睡眠
-			try{
-				Thread.sleep(200);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
+		   try{
+			   Thread.sleep(200);
+		   }
+		   catch (Exception e) {
+			 e.printStackTrace();
+		}
 		}
 	}
 	

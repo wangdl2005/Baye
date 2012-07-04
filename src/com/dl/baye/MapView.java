@@ -38,7 +38,7 @@ public class MapView{
 	static final int SEAM_BUTTON_TEXT = 9;
 	static final int cityPosWidth = 7;
 	static final int infoStartX = 560;
-	static final int infoStartY = 50;
+	static final int infoStartY = 40;
 	static final int infoHeight = 30;
 	static final int mapWidth = 400;
 	static final int mapHeight = 400;
@@ -238,16 +238,16 @@ public class MapView{
 					if(rChild_1.contains(x, y)){
 						Log.d(TAG, "招降");
 						if(gameView.canSurrender(city)){
-							gameView.toEnemyView(GameView.STATUS_SURRENDER,personsInEnemyCity);
+							gameView.toPersonView(GameView.STATUS_SURRENDER,personsInEnemyCity);
 						}
 					}else if(rChild_2.contains(x, y)){
 						if(gameView.canKill(city)){
-							gameView.toEnemyView(GameView.STATUS_KILL,personsInEnemyCity);
+							gameView.toPersonView(GameView.STATUS_KILL,personsInEnemyCity);
 						}
 						Log.d(TAG, "处斩");
 					}else if(rChild_3.contains(x, y)){
 						if(gameView.canBanish(city)){
-							gameView.toEnemyView(GameView.STATUS_BANISH,personsInEnemyCity);
+							gameView.toPersonView(GameView.STATUS_BANISH,personsInEnemyCity);
 						}
 						Log.d(TAG, "流放");
 					}else if(rChild_4.contains(x, y)){
@@ -290,8 +290,10 @@ public class MapView{
 						gameView.toCityView(gameView.getGCities());
 						Log.d(TAG, "城市");
 					}else if(rChild_3.contains(x, y)){
+						gameView.toInfluenceView(gameView.getGInfluence());
 						Log.d(TAG, "势力");
 					}else if(rChild_4.contains(x, y)){
+						gameView.toGoodsView(gameView.getGGoods());
 						Log.d(TAG, "宝物");
 					}
 				}
@@ -308,8 +310,12 @@ public class MapView{
 			if(status == STATUS_PICK_CITY){
 				CitySet cSet = null;
 				for(int i :gameView.rCities.keySet()){
-					cSet = gameView.rCities.get(i);
+					cSet = gameView.rCities.get(i);	
 					if(getRect(cSet).contains(x, y)){
+						if(cSet.compareTo(gameView.gCitySet)){
+							gameView.alert("请不要选择自己的城市",GameView.STATUS_NORMAL);
+							return true;
+						}
 						cSet.setId(i);
 						gameView.gCitySetToDo = cSet;
 					}
@@ -377,7 +383,7 @@ public class MapView{
 				paint.setARGB(255, 42, 48, 103);//设置字体颜色
 				paint.setAntiAlias(true);//抗锯齿
 				paint.setTextSize(18);
-				canvas.drawText("结束回合", btnOKX + 10, btnOKY + 20, paint);
+				canvas.drawText("结束回合", btnOKX + 30, btnOKY + 20, paint);
 			}
 		}
 		if(status == STATUS_PICK_CITY )

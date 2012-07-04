@@ -124,6 +124,7 @@ public class PersonView {
 		int tempCurrentI = currentI;
 		paint.setTextSize(16);//设置文字大小
 
+
 		if(personsInCity != null){
 			if(personsInCity.size() < numOfSpan){
 				int n = personsInCity.size() ;

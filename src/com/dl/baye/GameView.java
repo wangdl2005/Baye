@@ -77,6 +77,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	static final int STATUS_CITYVIEW = 3;
 	static final int STATUS_GOODSVIEW = 4;
 	static final int STATUS_INFLUENCEVIEW = 5;
+	static final int STATUS_BATTLEVIEW = 6;
 	static final int STATUS_ENDTURN =100;
 	//以下命令status 也可以作为命令ID
 	static final int STATUS_ASSART = 901;
@@ -153,6 +154,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	PersonView personView;
 	EnemyView enemyView;
 	GoodsView goodsView;
+	BattleView battleView;
 	InfluenceView influenceView;
 	//声音
 	MediaPlayer mMediaPlayer;
@@ -175,12 +177,15 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 		
 		getHolder().addCallback(this);
         this.drawThread = new DrawThread(getHolder(), this);//初始化刷帧线程
-        this.gvt = new GameViewThread(this);//初始化后台数据修改线程     
-        gvt.start();
+        this.gvt = new GameViewThread(this);//初始化后台数据修改线程    
+        
+        //gvt.start();
         
         initBitmap(resources);
-        initMap();//初始化地图
         initClass();//初始化所有用到的类
+        
+
+        setStatus(STATUS_BATTLEVIEW);
 	}
 
 	@Override
@@ -289,6 +294,9 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 				case STATUS_INFLUENCEVIEW:
 					influenceView.onDraw(canvas);
 					break;
+				case STATUS_BATTLEVIEW:
+					battleView.onDraw(canvas);
+					break;
 			}
 		}
 		//super.onDraw(canvas);
@@ -319,11 +327,8 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 		mapView = new MapView(this);
 		personView = new PersonView(this,null);
 		enemyView = new EnemyView(this, null);
+		battleView = new BattleView(this);
 	}	
-	//地图
-	public void initMap(){
-		
-	}
 	//图片资源
 	public void initBitmap(Resources r){
 		dialogBack = BitmapFactory.decodeResource(r, R.drawable.dialog_back);

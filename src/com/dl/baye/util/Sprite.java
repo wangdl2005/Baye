@@ -3,12 +3,13 @@ package com.dl.baye.util;
 import java.util.ArrayList;
 import com.dl.baye.BattleView;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
+import static com.dl.baye.util.Constant.*;
 public class Sprite {
-	public static final int tile = 32;
 	ArrayList<int[]> animationSegmentList = new ArrayList<int[]>();	//动画段列表，包括向上，向下等动画段
-	//当前的动画段在列表中的索引。静止：0下,1左，2右，3上，移动：4下，5左，6右，7上
+	//当前的动画段在列表中的索引。静止：0左，1右，2被攻击，3向左攻击，4向右攻击
 	int currentSegment;							//当前动画段的索引						
 	int currentFrame;								//当前动画段的动画帧索引
 	int x;		//精灵在大地图的坐标
@@ -16,14 +17,39 @@ public class Sprite {
 	int col;	//精灵在地图上的列数，通过求靠下31×31方块的中心所在的地方求出
 	int row;	//精灵在地图上的行数，通过求靠下31×31方块的中心所在的地方求出
 	SpriteThread st;
-	public Sprite(int row,int col){
+	public Sprite(int col,int row){
 		this.row = row;
 		this.col = col;
-		this.x = tile * row;
-		this.y = tile * col;
+		this.x = TILE * col;
+		this.y = TILE * row;
 		st = new SpriteThread(this);
 		//start
 	}
+	public int getRow(){
+		return row;
+	}
+	
+	public int getCol(){
+		return col;
+	}
+	
+	public void setX(int col){
+		this.col = col;
+		this.x = TILE * col;
+	}
+	public void setY(int row){
+		this.row = row;
+		this.y = TILE * row;
+	}
+	
+	public int getX(){
+		return TILE * col;
+	}
+	
+	public int getY(){
+		return TILE * row;
+	}
+	
 	//修改当前动画段的当前动画帧
 		public void nextFrame(){
 				int [] currSeg = animationSegmentList.get(currentSegment);
@@ -43,12 +69,13 @@ public class Sprite {
 		public void setAnimationSegment(int segment){
 			this.currentSegment = segment;		//设置动画段
 			this.currentFrame = 0;				//从头开始循环帧
-		}
-		//方法：将自己在屏幕上画出
-		public void drawSelf(Canvas canvas,int screenX,int screenY){
+		}	
+		
+		public void drawSelf(Canvas canvas,Bitmap[] bmps,int screenX,int screenY){
 			int imgId = animationSegmentList.get(currentSegment)[currentFrame];	//获取要绘制的那个帧
-			BattleView.drawGamePublic(imgId, canvas, screenX, screenY);		//调用BitmapManager的静态方法绘制图片
+			canvas.drawBitmap(bmps[imgId],screenX, screenY,null);		//调用BitmapManager的静态方法绘制图片		
 		}
+		
 		//方法：开启动画
 		public void startAnimation(){
 			st.isGameOn = true;

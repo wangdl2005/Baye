@@ -1,10 +1,20 @@
 package com.dl.baye.util;
 
 public class Constant {
-	public static final int SCREEN_WIDTH = 800;//屏幕宽度    
-	public static final int SCREEN_HEIGHT = 442;//屏幕宽度    
 	 
 	public static final String TAG = "SanGuoBaYe";
+	
+	//与地图相关的常量
+	public static final int TILE = 32;					//地图图元的大小
+	public static final int MAP_ROWS = 25;		//地图行数
+	public static final int MAP_COLS = 15;		//地图列数
+	public static final int SCREEN_ROWS = 16;	//屏幕能显示的行数
+	public static final int SCREEN_COLS = 11;	//屏幕能显示的列数
+	public static final int SCREEN_WIDTH = 800;	//屏幕宽度
+	public static final int SCREEN_HEIGHT = 442;	//屏幕高度
+	public static final int SPACE_FOR_ROLL = 124;	//英雄与边界的距离小于该值进行滚屏
+	public static final float AREA_PERCENT = 0.6f;		//重叠面积比例超过该值则判定为发生碰撞
+	public static final int SPAN_TO_ROLL = 8;		//每次滚屏像素数
 	/**
 	 * MapView 使用常量
 	 */

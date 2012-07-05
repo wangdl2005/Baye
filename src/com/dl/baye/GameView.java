@@ -26,6 +26,7 @@ import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
@@ -256,6 +257,14 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 			}
 		}
 		return  true;
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(status == STATUS_BATTLEVIEW){
+			return battleView.OnKeyDown(keyCode, event);
+		}
+		return true;
 	}
 
 	@Override

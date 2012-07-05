@@ -4,9 +4,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
+import static com.dl.baye.util.Constant.*;
 public class Map {
 
-	public static final int TILE = 32;
 	//地图矩阵
 	private int[][] mapMat;
 	//地图不可通过矩阵
@@ -24,6 +24,22 @@ public class Map {
 		if(notInMat[row][col] == 1)
 			flag = true;
 		return flag;
+	}
+	
+	public void onDraw(Canvas canvas,Bitmap[] bmp,int startCol,int startRow ,int offsetX,int offsetY)
+	{
+		for(int i=-1;i<=SCREEN_ROWS;++i){
+			if(startRow+i<0||startRow+i >=MAP_ROWS)
+				continue;
+			for(int j=-1;j<=SCREEN_COLS;++j)
+			{
+				if(startCol+j<0||startCol+j>=MAP_COLS)
+					continue;
+				if(bmp[mapMat[startRow+i][startCol+j]]!=null){
+					canvas.drawBitmap(bmp[mapMat[startRow+i][startCol+j]], j*TILE-offsetX, i*TILE -offsetY,null);
+				}
+			}
+		}
 	}
 	
 	public void drawSelf(Canvas canvas,Bitmap[] bmp){

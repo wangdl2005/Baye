@@ -3,7 +3,11 @@ package com.dl.baye.util;
 public class Constant {
 	 
 	public static final String TAG = "SanGuoBaYe";
-	
+
+	//与缩略地图相关的常量
+	public static final int MINI_MAP_TILE_SIZE = 8;		//缩略地图的每块大小
+	public static final int MINI_MAP_START_X = 600;		//缩略地图的开始x坐标
+	public static final int MINI_MAP_START_Y = 0;		//缩略地图的开始y坐标
 	//与地图相关的常量
 	public static final int TILE = 32;					//地图图元的大小
 	public static final int MAP_ROWS = 25;		//地图行数
@@ -74,11 +78,7 @@ public class Constant {
 	public static final int ROLL_SCREEN_SPACE_DOWN = 216;//英雄距屏幕下边界216个像素时就应该滚屏了480-(31*8+16)
 	public static final int ROLL_SCREEN_SPACE_LEFT =140;//英雄距屏幕右边界140个像素时就应该滚屏了31*4+16
 	public static final int ROLL_SCREEN_SPACE_UP = 140;//英雄距屏幕下边界140个像素时就应该滚屏了31*4+16
-	public static final int MINI_MAP_SPAN = 4;//迷你地图的块大小
-	public static final int MINI_MAP_START_X = 80;//迷你地图开始的x坐标,
-	public static final int MAP_BUTTON_START_X = 62;//迷你地图开关的开始x坐标
-	public static final int MAP_BUTTON_START_Y = 392;//迷你地图开关的开始y坐标
-	public static final int MAP_BUTTON_SIZE = 17;//迷你地图开关的大小
+	
 	public static final int STRENGTH_COST_DECREMENT = 2;//每次技能升级减小的体力消耗值
 	//最大君主数
 	public static final int KING_MAX = 100;

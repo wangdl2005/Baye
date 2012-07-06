@@ -177,6 +177,18 @@ public class Person {
 	private int searcherId;
 	//出现城市编号
 	private int appearCityId;
+	//移动力
+	private int move;
+	//攻击范围
+	private int attackRange;
+	
+	public int getAttackRange(){
+		return this.attackRange;
+	}
+	
+	public int getMove(){
+		return this.move;
+	}
 	
 	public Person(int id,int belong,int level,int force,int iq,int devotion,int iCharacter
 			,int exper,int thew,int armType,int armsNum,int Euips,int age//,...
@@ -195,6 +207,53 @@ public class Person {
 		this.Euips[0] = (Euips & 0xff00) >> 8;
 		this.Euips[1]= Euips & 0x00ff;		
 		this.age = age;
+		this.move = setMove(this.armsType);
+		this.attackRange = setAttackRange(this.armsType);
+	}
+	
+	private int setAttackRange(ARMS_TYPE armType)
+	{
+		int range = 1;
+		switch(armType){
+		case BuBing:
+			break;
+		case GongBing:
+			range = 2;
+			break;
+		case JiBing:
+			break;
+		case QiBing:
+			break;
+		case ShuiBing:
+			break;
+		case XuanBing:
+			break;
+		}
+		return range;
+	}
+	
+	private int setMove(ARMS_TYPE armType){
+		int move = 5;
+		switch(armType){
+		case BuBing:
+			break;
+		case GongBing:
+			move = 4;
+			break;
+		case JiBing:
+			move = 10;
+			break;
+		case QiBing:
+			move = 8;
+			break;
+		case ShuiBing:
+			move = 4;
+			break;
+		case XuanBing:
+			move = 6;
+			break;
+		}
+		return move;
 	}
 	
 	public Person(int id,int belong,int level,int force,int iq,int devotion,int iCharacter

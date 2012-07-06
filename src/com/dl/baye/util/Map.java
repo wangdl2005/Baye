@@ -12,6 +12,10 @@ public class Map {
 	//地图不可通过矩阵
 	private int[][] notInMat;
 		
+	public int[][] getNotInMat() {
+		return notInMat;
+	}
+
 	public Map(int[][] mapMat,int[][] notInMat){
 		this.mapMat = mapMat;
 		this.notInMat = notInMat;
@@ -24,6 +28,25 @@ public class Map {
 		if(notInMat[row][col] == 1)
 			flag = true;
 		return flag;
+	}
+	
+	public int getMapCost(int col,int row){
+		int cost = 0;
+		switch(mapMat[row][col]){
+		case 0:
+			cost = 1;
+			break;
+		case 1:
+			cost = 2;
+			break;
+		case 2:
+			cost = 3;
+			break;
+		case 3:
+			cost = 3;
+			break;
+		}
+		return cost;
 	}
 	
 	public void onDraw(Canvas canvas,Bitmap[] bmp,int startCol,int startRow ,int offsetX,int offsetY)

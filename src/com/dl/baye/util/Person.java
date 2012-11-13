@@ -233,24 +233,24 @@ public class Person {
 	}
 	
 	private int setMove(ARMS_TYPE armType){
-		int move = 5;
+		int move = 3;
 		switch(armType){
 		case BuBing:
 			break;
 		case GongBing:
-			move = 4;
+			move = 2;
 			break;
 		case JiBing:
-			move = 10;
+			move = 6;
 			break;
 		case QiBing:
-			move = 8;
+			move = 5;
 			break;
 		case ShuiBing:
-			move = 4;
+			move = 3;
 			break;
 		case XuanBing:
-			move = 6;
+			move = 4;
 			break;
 		}
 		return move;

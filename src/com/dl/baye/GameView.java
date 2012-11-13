@@ -187,6 +187,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
         
 
         setStatus(STATUS_BATTLEVIEW);
+        
 	}
 
 	@Override
@@ -252,6 +253,11 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 				case STATUS_INFLUENCEVIEW:
 				{
 					influenceView.onTouchEvent(event);
+					break;
+				}
+				case STATUS_BATTLEVIEW:
+				{
+					battleView.onTouchEvent(event);
 					break;
 				}
 			}

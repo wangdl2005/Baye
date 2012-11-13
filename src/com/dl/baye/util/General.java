@@ -46,4 +46,7 @@ public class General  extends Sprite{
 		this.team = team;
 	}
 
+	public boolean isEqual(General g){
+		return g.getPerson().getId() == this.getPerson().getId();
+	}
 }

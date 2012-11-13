@@ -15,13 +15,21 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 
 public class BattleView {
 	GameView gameView;
 	Resources r;
 	
-	private int state;
+	private int state;//0 : 选中武将，显示信息,1,显示移动范围2显示菜单,3,显示攻击范围4选择攻击目标
+	static final int STATE_MSG = 0;
+	static final int STATE_SHOW_MOVE = 1;
+	static final int STATE_SHOW_MENU = 2;
+	static final int STATE_SHOW_ATK = 3;
+	static final int STATE_SEL_ATK = 4;
+	static final int STATE_NONE = -1;
 	private Map map;
 	private ArrayList<General> playerList = new ArrayList<General>();
 	private ArrayList<General> enemyList = new ArrayList<General>();
@@ -55,6 +63,8 @@ public class BattleView {
 	int offsetY = 0;			//屏幕左上角相对于startRow的偏移量
 	// 当前光标X，Y
 	int curRow,curCol;
+	boolean flagDrawMove = false;
+	boolean flagDrawAttack = false;
 	
 	public BattleView(GameView gameView){
 		this.gameView = gameView;
@@ -69,10 +79,19 @@ public class BattleView {
 		initMap();
 		initGeneral();
 		
-		gAction = enemyList.get(0);
-		curCol = gAction.getCol();
-		curRow = gAction.getRow();
-		menu = new Menu(maxX-1);
+//		gAction = playerList.get(0);
+//		curCol = gAction.getCol();
+//		curRow = gAction.getRow();
+		menu = new Menu(maxX-1){
+			@Override
+			public void onTouch(MotionEvent event) {
+				if(event.getAction() == MotionEvent.ACTION_DOWN){
+					if(state == STATE_SHOW_MENU){
+						
+					}
+				}
+			}
+		};
 		
 		startRow = 0;					//将startRow置零
 		startCol = 0;					//将startCol置零
@@ -80,8 +99,7 @@ public class BattleView {
 		offsetY = 0;					//将offsetY置零
 		initVar();
 		
-
-		//openMenu(2);
+		state = STATE_NONE;
 		setMoveRange();
 		setAttackRange(true);
 	}
@@ -107,10 +125,10 @@ public class BattleView {
 				{9,10,11,12}
 				};
 		General player01 = new General(
-				gameView.gPersons.get(0), 0, 2, 2);
+				gameView.gPersons.get(0), 0, 5, 5);
 		player01.makeAnimation(animatId);
 		General player02 = new General(
-				gameView.gPersons.get(1), 0, 3, 2);
+				gameView.gPersons.get(1), 0, 6, 7);
 		player02.makeAnimation(animatId);
 		playerList.add(player01);
 		playerList.add(player02);
@@ -178,13 +196,7 @@ public class BattleView {
 				{0,1,2,1,2,1,2,2,2,1,2,1,2,1,0},
 				{0,1,2,1,1,1,1,2,1,1,1,1,2,1,0},
 				{0,1,2,2,1,2,1,1,1,2,1,2,2,1,0},
-				{0,1,1,1,1,2,1,2,1,2,1,1,1,1,0},
-				{0,1,2,2,2,2,3,3,3,3,3,3,3,1,0},
-				{0,1,1,1,1,2,1,2,1,2,1,1,1,1,0},
-				{0,0,0,0,1,2,1,2,1,2,1,0,0,0,0},
-				{0,1,2,2,2,2,3,3,3,3,3,3,3,1,0},
-				{0,1,1,1,1,2,1,2,1,2,1,1,1,1,0},
-				{0,0,0,0,1,2,1,2,1,2,1,0,0,0,0}
+				{0,1,1,1,1,2,1,2,1,2,1,1,1,1,0}
 			};
 		int[][] notInMat = 
 			{
@@ -206,25 +218,19 @@ public class BattleView {
 				{0,0,1,0,1,0,1,1,1,0,1,0,1,0,0},
 				{0,0,1,0,0,0,0,1,0,0,0,0,1,0,0},
 				{0,0,1,1,0,1,0,0,0,1,0,1,1,0,0},
-				{0,0,0,0,0,1,0,1,0,1,0,0,0,0,0},
-				{0,0,1,1,1,1,0,0,0,0,0,0,0,0,0},
-				{0,0,0,0,0,1,0,1,0,1,0,0,0,0,0},
-				{0,0,0,0,0,1,0,1,0,1,0,0,0,0,0},
-				{0,0,1,1,1,1,0,0,0,0,0,0,0,0,0},
-				{0,0,0,0,0,1,0,1,0,1,0,0,0,0,0},
 				{0,0,0,0,0,1,0,1,0,1,0,0,0,0,0}
 			};
 		map = new Map(mapMat, notInMat);
 	}
 	
 	public void startGame(){
-		for(General g:playerList){
-			g.startAnimation();
-			g.setAnimationSegment(3);
-		}
-		for(General g:enemyList){
-			g.startAnimation();
-		}
+//		for(General g:playerList){
+//			g.startAnimation();
+//			g.setAnimationSegment(3);
+//		}
+//		for(General g:enemyList){
+//			g.startAnimation();
+//		}
 	}
 	
 
@@ -240,7 +246,7 @@ public class BattleView {
 		//map.drawSelf(canvas, mapBitmap)
 		map.onDraw(canvas,mapBitmap,tempStartCol,tempStartRow,tempOffsetX,tempOffsetY);
 		//移动范围绘制
-		if(true/*条件*/)
+		if(flagDrawMove/*条件*/)
 		{
 			for(int i=0;i<maxY;++i)
 			{
@@ -266,7 +272,7 @@ public class BattleView {
 			// 已行动完毕			
 		}		
 		// 攻击范围绘制
-		if(true/*条件*/)
+		if(flagDrawAttack/*条件*/)
 		{
 			for (int j = 0; j <= maxY - 1; j++) {
 				for (int i = 0; i <= maxX - 1; i++) {
@@ -287,8 +293,8 @@ public class BattleView {
 				}
 			}
 		}
-		// 		绘制移动路线
-		if(true/*条件*/)
+		// 		绘制移动路线 暂不绘制
+		if(false/*条件*/)
 		{
 			int count = 0;
 			for (int j = 0; j <= maxY - 1; j++) {
@@ -392,8 +398,67 @@ public class BattleView {
 		// 战斗回合
 			//移动			
 	}
-	
+	public boolean onTouchEvent(MotionEvent event){
+		if(event.getAction() == MotionEvent.ACTION_DOWN){
+			curRow = (int) event.getY()/TILE + startRow;
+			curCol = (int)event.getX()/TILE + startCol;
+			Log.d(TAG, "row:" + curRow +" col:" + curCol);
+			General gSelect = getGeneral(curCol,curRow);
+			switch(state){
+			case STATE_NONE:
+				if(gSelect != null){
+					gAction = gSelect;
+					//show message
+					state = STATE_MSG;
+				}
+				break;
+			case STATE_MSG:
+				if(gSelect != null && gAction!= null && gSelect.isEqual(gAction)){
+					state = STATE_SHOW_MOVE;
+					initVar();
+					setMoveRange();
+					setAttackRange(true);
+					//绘制移动范围
+					flagDrawMove = true;
+				}
+				break;
+			case STATE_SHOW_MOVE:
+				if(gSelect != null && gAction!= null  ){
+					if(gSelect.isEqual(gAction)){
+						state = STATE_SHOW_MENU;
+						openMenu(2);
+					}
+					else{
+						//sel move
+					}
+				}
+				break;
+			case STATE_SHOW_MENU:
+				menu.onTouch(event);
+				break;
+			case STATE_SHOW_ATK:
+				break;
+			case STATE_SEL_ATK:
+				break;
+			}
+			if(gSelect != null){
+				Log.d(TAG, "name:" + gSelect.getPerson().getName());
+				initVar();
+				setMoveRange();
+				setAttackRange(true);
+				//绘制移动范围
+				flagDrawMove = true;
+				//开启菜单
+				openMenu(2);
+			}
+			if(menu.visible == true){
+				menu.onTouch(event);
+			}
+		}
+		return true;
+	}
 	public boolean OnKeyDown(int keyCode, KeyEvent event){
+		 /*
 		switch(event.getKeyCode()){
 		case KeyEvent.KEYCODE_W:
 			--curRow;
@@ -427,7 +492,7 @@ public class BattleView {
 			setMovingCourse();
 			CheckIfRollScreen(3);
 			break;
-		}
+		}*/
 		return true;
 	}
 	

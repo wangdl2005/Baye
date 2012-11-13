@@ -10,7 +10,7 @@ public class Constant {
 	public static final int MINI_MAP_START_Y = 0;		//缩略地图的开始y坐标
 	//与地图相关的常量
 	public static final int TILE = 32;					//地图图元的大小
-	public static final int MAP_ROWS = 25;		//地图行数
+	public static final int MAP_ROWS = 19;		//地图行数
 	public static final int MAP_COLS = 15;		//地图列数
 	public static final int SCREEN_ROWS = 16;	//屏幕能显示的行数
 	public static final int SCREEN_COLS = 11;	//屏幕能显示的列数

@@ -3,19 +3,21 @@ package com.dl.baye.util;
 public class Constant {
 	 
 	public static final String TAG = "SanGuoBaYe";
-
+	//是否已行动
+	public static final int BE_ACTION = 1;
+	public static final int NO_ACTION = 0;
 	//与缩略地图相关的常量
-	public static final int MINI_MAP_TILE_SIZE = 8;		//缩略地图的每块大小
-	public static final int MINI_MAP_START_X = 600;		//缩略地图的开始x坐标
-	public static final int MINI_MAP_START_Y = 0;		//缩略地图的开始y坐标
+	public static final int MINI_MAP_TILE_SIZE = 5;		//缩略地图的每块大小
+	public static final int MINI_MAP_START_X = 640;		//缩略地图的开始x坐标
+	public static final int MINI_MAP_START_Y = 20;		//缩略地图的开始y坐标
 	//与地图相关的常量
 	public static final int TILE = 32;					//地图图元的大小
-	public static final int MAP_ROWS = 19;		//地图行数
-	public static final int MAP_COLS = 15;		//地图列数
-	public static final int SCREEN_ROWS = 16;	//屏幕能显示的行数
-	public static final int SCREEN_COLS = 11;	//屏幕能显示的列数
+	public static final int MAP_ROWS = 32;		//地图行数
+	public static final int MAP_COLS = 32;		//地图列数
+	public static final int SCREEN_ROWS = 15;	//屏幕能显示的行数
+	public static final int SCREEN_COLS = 20;	//屏幕能显示的列数
 	public static final int SCREEN_WIDTH = 800;	//屏幕宽度
-	public static final int SCREEN_HEIGHT = 442;	//屏幕高度
+	public static final int SCREEN_HEIGHT = 480;	//屏幕高度
 	public static final int SPACE_FOR_ROLL = 124;	//英雄与边界的距离小于该值进行滚屏
 	public static final float AREA_PERCENT = 0.6f;		//重叠面积比例超过该值则判定为发生碰撞
 	public static final int SPAN_TO_ROLL = 8;		//每次滚屏像素数

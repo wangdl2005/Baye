@@ -71,6 +71,10 @@ public class Menu {
 		return (String) menuItem.get(index);
 
 	}
+	
+	public String getCurMenuItem(){
+		return getMenuItem(cur);
+	}
 
 	/**
 	 * 设定菜单
@@ -80,17 +84,17 @@ public class Menu {
 		switch (this.menuType) {
 		case 0:
 			this.width = 3;
-			this.height = 1;
+			this.height = size;//1
 			menuItem.add("结束");
 			break;
 		case 1:
 			this.width = 3;
-			this.height = 1;
+			this.height = size;//1
 			menuItem.add("待机");
 			break;
 		case 2:
 			this.width = 3;
-			this.height = 2;
+			this.height = size;
 			menuItem.add("攻击");
 			menuItem.add("待机");
 			break;
@@ -140,8 +144,15 @@ public class Menu {
 		}
 	}
 	
-	public void onTouch(MotionEvent event){
-		
+	public void open(int menuType){
+		this.setMenuType(menuType);
+		this.setVisible(true);
+		this.cur = 0;
+	}
+	
+	public void close(){
+		this.setVisible(false);
+		this.cur = 0;
 	}
 
 	public int getMenuType() {

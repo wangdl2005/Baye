@@ -257,7 +257,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 				}
 				case STATUS_BATTLEVIEW:
 				{
-					battleView.onTouchEvent(event);
+					//battleView.onTouchEvent(event);
 					break;
 				}
 			}
@@ -268,7 +268,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if(status == STATUS_BATTLEVIEW){
-			return battleView.OnKeyDown(keyCode, event);
+			return battleView.OnKeyDown(keyCode);
 		}
 		return true;
 	}
@@ -310,7 +310,7 @@ public class GameView extends SurfaceView implements Callback,OnTouchListener{
 					influenceView.onDraw(canvas);
 					break;
 				case STATUS_BATTLEVIEW:
-					battleView.onDraw(canvas);
+					battleView.OnDraw(canvas);
 					break;
 			}
 		}

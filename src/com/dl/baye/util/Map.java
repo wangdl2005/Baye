@@ -1,16 +1,35 @@
 package com.dl.baye.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.util.Log;
 
 import static com.dl.baye.util.Constant.*;
 public class Map {
 
 	//地图矩阵
-	private int[][] mapMat;
+	private int[][] mapMat = new int[MAP_ROWS][MAP_COLS];
+
+	public int[][] getMapMat() {
+		return mapMat;
+	}
+
+
 	//地图不可通过矩阵
-	private int[][] notInMat;
+	private int[][] notInMat = new int[MAP_ROWS][MAP_COLS];
 		
 	public int[][] getNotInMat() {
 		return notInMat;
@@ -20,6 +39,38 @@ public class Map {
 		this.mapMat = mapMat;
 		this.notInMat = notInMat;
 	}	
+	
+	public Map(InputStream is){
+		loadArray(is);
+	}
+	
+	public void loadArray(InputStream is){
+		BufferedReader reader = null;
+		try{
+			reader = new BufferedReader(new InputStreamReader(is));
+			String result = null;
+			int index = 0;
+			while((result = reader.readLine())!= null){
+				String[] strings = result.split(" ");
+				for (int i = 0; i < strings.length; i++) {
+					mapMat[index][i] = Integer.parseInt(strings[i]);
+					notInMat[index][i] = (mapMat[index][i] == 0)? 0 : 1;
+				}
+				index++;
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+	}
 	
 	//是否可以通过
 	public boolean isReach(int row,int col)
@@ -87,4 +138,5 @@ public class Map {
 				}
 			}
 	}
+	
 }

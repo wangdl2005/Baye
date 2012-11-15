@@ -213,9 +213,9 @@ public class Person {
 	
 	private int setAttackRange(ARMS_TYPE armType)
 	{
-		int range = 1;
+		int range = 4;
 		switch(armType){
-		case BuBing:
+		case BuBing:			
 			break;
 		case GongBing:
 			range = 2;
@@ -233,12 +233,11 @@ public class Person {
 	}
 	
 	private int setMove(ARMS_TYPE armType){
-		int move = 3;
+		int move = 4;
 		switch(armType){
 		case BuBing:
 			break;
 		case GongBing:
-			move = 2;
 			break;
 		case JiBing:
 			move = 6;
@@ -247,10 +246,10 @@ public class Person {
 			move = 5;
 			break;
 		case ShuiBing:
-			move = 3;
+			move = 5;
 			break;
 		case XuanBing:
-			move = 4;
+			move = 3;
 			break;
 		}
 		return move;

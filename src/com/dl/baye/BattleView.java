@@ -201,7 +201,7 @@ public class BattleView {
 		posOri[0][2][0] = 4;posOri[0][2][1] = 3;
 		posOri[0][3][0] = 5;posOri[0][3][1] = 5;
 		posOri[0][4][0] = 4;posOri[0][4][1] = 5;
-		posOri[1][0][0] = 7;posOri[1][0][1] = 8;
+		posOri[1][0][0] = 6;posOri[1][0][1] = 6;
 		posOri[1][1][0] = 9;posOri[1][1][1] = 10;
 		posOri[1][2][0] = 24;posOri[1][2][1] = 23;
 		posOri[1][3][0] = 25;posOri[1][3][1] = 25;
@@ -335,19 +335,24 @@ public class BattleView {
 		
 		//绘制武将信息
 		if(gSel != null){
-			text = "武将 : " + gSel.getPerson().getName();
+			String name =  gSel.getPerson().getName();
+			int force = gSel.getPerson().getForce();
+			int iq = gSel.getPerson().getIq();
+			String armType = formatArmsType(gSel.getPerson().getArmsType());
+			int team = gSel.getTeam();
+			text = "武将 : " + name;
 		    txtUtil = new TextUtil(text, MINI_MAP_START_X + 20, 200, 
 		    		180, 30, Color.WHITE, Color.BLACK, 0, 20);
 		    txtUtil.InitText();
 		    txtUtil.DrawText(canvas);
 		    
-		    text = "武力 : " + gSel.getPerson().getForce();
+		    text = "武力 : " + force;
 		    txtUtil = new TextUtil(text, MINI_MAP_START_X + 20, 240, 
 		    		180, 30, Color.WHITE, Color.BLACK, 0, 20);
 		    txtUtil.InitText();
 		    txtUtil.DrawText(canvas);
 		    
-		    text = "智力 : " + gSel.getPerson().getIq();
+		    text = "智力 : " + iq;
 		    txtUtil = new TextUtil(text, MINI_MAP_START_X + 20, 280, 
 		    		180, 30, Color.WHITE, Color.BLACK, 0, 20);
 		    txtUtil.InitText();
@@ -359,7 +364,7 @@ public class BattleView {
 		    txtUtil.InitText();
 		    txtUtil.DrawText(canvas);
 		    
-		    text = "兵种 : " + formatArmsType(gSel.getPerson().getArmsType());
+		    text = "兵种 : " + armType;
 		    txtUtil = new TextUtil(text, MINI_MAP_START_X + 20, 360, 
 		    		180, 30, Color.WHITE, Color.BLACK, 0, 20);
 		    txtUtil.InitText();
@@ -371,7 +376,7 @@ public class BattleView {
 		    txtUtil.InitText();
 		    txtUtil.DrawText(canvas);
 		    
-		    text = "Team : " + gSel.getTeam();
+		    text = "Team : " + team;
 		    txtUtil = new TextUtil(text, MINI_MAP_START_X + 20, 440, 
 		    		180, 30, Color.WHITE, Color.BLACK, 0, 20);
 		    txtUtil.InitText();

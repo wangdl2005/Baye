@@ -27,7 +27,7 @@ public class StateFightMenu implements GameState {
 
 			break;
 		case KeyEvent.KEYCODE_ENTER:
-			if(bv.menu.getCurMenuItem().equals("攻击")){
+			if(bv.menu.getCurMenuItem().equals("攻击")){ 
 				BattleView.stateManager.FightAtkSel();
 				bv.menu.close();
 			}
@@ -49,8 +49,10 @@ public class StateFightMenu implements GameState {
 	@Override
 	public void Draw(Canvas canvas) {
 		// 绘制菜单
+		if(bv.gAction != null){
 		bv.menu.drawSelf(canvas, BattleView.listBmp, BattleView.iconBmp
-				, bv.curCol, bv.curRow, 0, 0);
+				, bv.gAction.getCol(), bv.gAction.getRow(), 0, 0);
+		}
 	}
 
 }

@@ -84,17 +84,17 @@ public class Menu {
 		switch (this.menuType) {
 		case 0:
 			this.width = 3;
-			this.height = size;//1
+			this.height = 1;//1
 			menuItem.add("结束");
 			break;
 		case 1:
 			this.width = 3;
-			this.height = size;//1
+			this.height = 1;//1
 			menuItem.add("待机");
 			break;
 		case 2:
 			this.width = 3;
-			this.height = size;
+			this.height = 2;
 			menuItem.add("攻击");
 			menuItem.add("待机");
 			break;

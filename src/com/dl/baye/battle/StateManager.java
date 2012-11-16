@@ -42,6 +42,7 @@ public class StateManager {
 	public void FightMove(){
 		if(stateFightMove.isMoved){
 			bv.gAction.moveTo(stateFightMove.oriCol, stateFightMove.oriRow);
+			stateFightMove.isMoved = false;
 		}
 		stateFightMove.setMoveRange();	
 		this.gameState = stateFightMove;	
@@ -51,13 +52,59 @@ public class StateManager {
 		this.gameState = stateFightMenu; 
 		Log.d(TAG, "进入Menu");
 	}
-	public void FightAttack(){this.gameState = stateFightAttack;	Log.d(TAG, "进入Attack"); }
+	public void FightAttack(){
+		if(bv.gAction!=null && bv.gSel != null){
+			int seg = 0;
+			switch(bv.gAction.getDirection()){
+			case 0:
+				seg = 3;break;
+			case 1:
+				seg = 4;break;
+			}
+			bv.gAction.startOnceAnimation(seg);
+			bv.gSel.startOnceAnimation(2);
+		}
+		if(bv.gAction.getSpriteThread().isGameOn())
+		{
+			this.gameState = stateFightAttack;	
+			Log.d(TAG, "进入Attack"); 
+			//ATTACK 动画
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		while(true){
+		if(this.gameState.equals(stateFightAttack) && bv.gAction.getSpriteThread().isGameOn() == false)
+		{
+			FightAnime();
+			break;
+		}
+		}
+	}
 	public void FightAtkSel(){
 		stateFightAtkSel.setAttackRange();
 		this.gameState = stateFightAtkSel; 	
 		Log.d(TAG, "进入AtkSel");
 	}
-	public void FightAnime(){this.gameState = stateFightAnime;	Log.d(TAG, "进入Anime"); }
-	public void None(){this.gameState = stateNone;						Log.d(TAG, "进入None");}
+	public void FightAnime(){
+		this.gameState = stateFightAnime;
+		Log.d(TAG, "进入Anime");
+		//显示战场动画
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		//设置待机
+		bv.gAction.setAction(BE_ACTION);
+		None();
+	}
+	public void None(){
+		stateFightMove.isMoved = false;
+		this.gameState = stateNone;		
+		Log.d(TAG, "进入None");
+	}
 	public void SysMenu(){this.gameState = stateSysMenu;			Log.d(TAG, "进入SysMenu");}
 }

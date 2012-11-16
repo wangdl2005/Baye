@@ -56,6 +56,8 @@ public class General  extends Sprite{
 		this.person = person;
 		this.team = team;
 		this.action = 0;
+		this.direction = team;
+		this.currentSegment = team;
 	}
 
 	public boolean isEqual(General g){

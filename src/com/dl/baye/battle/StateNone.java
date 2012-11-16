@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 
 import com.dl.baye.BattleView;
+import com.dl.baye.util.General;
+
 import static com.dl.baye.util.Constant.*;
 
 public class StateNone implements GameState {
@@ -41,8 +43,16 @@ public class StateNone implements GameState {
 //			}
 			break;
 		case KeyEvent.KEYCODE_ENTER:
-			if((bv.gAction = bv.getGeneral(0, bv.curCol, bv.curRow))  !=  null && bv.gAction.getAction() != 1){
-				BattleView.stateManager.FightMove();
+			General tmp = null;
+			if((tmp = bv.getGeneral(bv.curCol, bv.curRow))!=null){
+				if(tmp.getTeam() == 0 && tmp.getAction() != 1){
+					bv.gAction = tmp;
+					BattleView.stateManager.FightMove();
+				}
+			}
+			else{
+				bv.menu.open(0);
+				BattleView.stateManager.SysMenu();
 			}
 			break;
 		}

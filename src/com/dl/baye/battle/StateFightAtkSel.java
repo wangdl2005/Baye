@@ -61,7 +61,8 @@ public class StateFightAtkSel implements GameState {
 			}
 		}
 		//绘制攻击标志
-		if(bv.gSel != null && bv.gSel.getTeam() != bv.gAction.getTeam()){
+		if(bv.attackList[bv.curRow][bv.curCol] == 1 
+				&& bv.gSel != null && bv.gAction !=null && bv.gSel.getTeam() != bv.gAction.getTeam()){
 			canvas.drawBitmap(BattleView.iconBmp[4], bv.curCol * TILE, bv.curRow * TILE,null);
 		}
 		//光标

@@ -57,7 +57,7 @@ public class General  extends Sprite{
 		this.team = team;
 		this.action = 0;
 		this.direction = team;
-		this.currentSegment = team;
+		this.setAnimationSegment(team);
 	}
 
 	public boolean isEqual(General g){

@@ -45,9 +45,9 @@ public class StateSysMenu implements GameState {
 	}
 
 	@Override
-	public void Draw(Canvas canvas) {
+	public void Draw(Canvas canvas, int startCol, int startRow) {
 		bv.menu.drawSelf(canvas, BattleView.listBmp, BattleView.iconBmp
-				, bv.curCol, bv.curRow, 0, 0);
+				, bv.curCol - startCol, bv.curRow - startRow, 0, 0);
 
 	}
 

@@ -15,21 +15,28 @@ public class StateFightAtkSel implements GameState {
 	public boolean KeyDown(int keyCode) {
 		switch(keyCode){
 		case KeyEvent.KEYCODE_W:
-			//+1 是因为地图有一部分在屏幕外
-			bv.curRow = (bv.curRow-1 <= bv.startRow) ?(bv.startRow+1) : (bv.curRow-1);
-
+			bv.curRow = (bv.curRow-1 < 0) ? 0 : (bv.curRow-1);
+			if(bv.curRow < bv.startRow && bv.startRow > 0){
+				--bv.startRow;
+			}
 			break;
 		case KeyEvent.KEYCODE_A:
-			bv.curCol = (bv.curCol-1 <= bv.startCol) ?(bv.startCol+1) : (bv.curCol-1);
-
+			bv.curCol = (bv.curCol-1 < 0) ? 0 : (bv.curCol -1);
+			if(bv.curCol < bv.startCol && bv.startCol > 0){
+				--bv.startCol;
+			}
 			break;
 		case KeyEvent.KEYCODE_S:
-			bv.curRow = (bv.curRow+1 > bv.startRow + SCREEN_ROWS) ? (bv.startRow + SCREEN_ROWS ): (bv.curRow + 1);
-
+			bv.curRow = (bv.curRow + 1 > MAP_ROWS-1) ? (MAP_ROWS-1):(bv.curRow + 1);
+			if(bv.curRow > bv.startRow + SCREEN_ROWS -1 && bv.startRow + SCREEN_ROWS -1 < MAP_ROWS-1){
+				++bv.startRow;
+			}
 			break;
 		case KeyEvent.KEYCODE_D:
-			bv.curCol = (bv.curCol+1 > bv.startCol + SCREEN_COLS) ?(bv.startCol + SCREEN_COLS ): (bv.curCol+1);
-
+			bv.curCol = (bv.curCol + 1 > MAP_COLS-1) ? (MAP_COLS-1):(bv.curCol + 1);
+			if(bv.curCol > bv.startCol + SCREEN_COLS -1 && bv.startCol + SCREEN_COLS-1  < MAP_COLS-1){
+				++bv.startCol;
+			}
 			break;
 		case KeyEvent.KEYCODE_ENTER:
 			if(bv.attackList[bv.curRow][bv.curCol] == 1 && bv.gSel != null 
@@ -51,22 +58,22 @@ public class StateFightAtkSel implements GameState {
 	}
 
 	@Override
-	public void Draw(Canvas canvas) {
+	public void Draw(Canvas canvas, int startCol, int startRow) {
 		//攻击范围
-		for (int j = 0; j <= MAP_ROWS - 1; j++) {
-			for (int i = 0; i <= MAP_COLS - 1; i++) {
+		for (int j = startRow; j <= startRow + SCREEN_ROWS - 1; j++) {
+			for (int i = startCol; i <= startCol +SCREEN_COLS - 1; i++) {
 				if(bv.attackList[j][i] == 1){
-					canvas.drawBitmap(BattleView.iconBmp[3], i * TILE, j * TILE,null);
+					canvas.drawBitmap(BattleView.iconBmp[3], (i - startCol) * TILE, (j - startRow) * TILE,null);
 				}
 			}
 		}
 		//绘制攻击标志
 		if(bv.attackList[bv.curRow][bv.curCol] == 1 
 				&& bv.gSel != null && bv.gAction !=null && bv.gSel.getTeam() != bv.gAction.getTeam()){
-			canvas.drawBitmap(BattleView.iconBmp[4], bv.curCol * TILE, bv.curRow * TILE,null);
+			canvas.drawBitmap(BattleView.iconBmp[4], (bv.curCol - startCol) * TILE,( bv.curRow - startRow)* TILE,null);
 		}
 		//光标
-		canvas.drawBitmap(BattleView.iconBmp[0], bv.curCol * TILE ,bv.curRow * TILE, null);		
+		canvas.drawBitmap(BattleView.iconBmp[0], (bv.curCol - startCol) * TILE,( bv.curRow - startRow)* TILE, null);		
 	}
 	
 	public void setAttackRange(){
@@ -83,11 +90,11 @@ public class StateFightAtkSel implements GameState {
 			{
 				if(i<0 || i>MAP_ROWS)
 					continue;
-				if(i-(row-range) + col < MAP_COLS&&i-(row-range) + col >0)
+				if(i-(row-range) + col < MAP_COLS&&i-(row-range) + col >=0)
 				{
 					bv.attackList[i][i-(row-range) + col] = 1;
 				}
-				if(col-(i-(row-range)) >0 &&col-(i-(row-range)) <MAP_COLS)
+				if(col-(i-(row-range)) >=0 &&col-(i-(row-range)) <MAP_COLS)
 				{
 					bv.attackList[i][col-(i-(row-range))] = 1;
 				}
@@ -96,11 +103,11 @@ public class StateFightAtkSel implements GameState {
 			{
 				if(i<0 || i>MAP_ROWS)
 					continue;
-				if(range-(i-row) + col < MAP_COLS&&range-(i-row) + col >0)
+				if(range-(i-row) + col < MAP_COLS&&range-(i-row) + col >=0)
 				{
 					bv.attackList[i][range-(i-row) + col] = 1;
 				}
-				if(col-(range-(i-row) ) >0 &&col-(range-(i-row)) <MAP_COLS)
+				if(col-(range-(i-row) ) >=0 &&col-(range-(i-row)) <MAP_COLS)
 				{
 					bv.attackList[i][col-(range-(i-row))] = 1;
 				}

@@ -47,11 +47,11 @@ public class StateFightMenu implements GameState {
 	}
 
 	@Override
-	public void Draw(Canvas canvas) {
+	public void Draw(Canvas canvas, int startCol, int startRow) {
 		// 绘制菜单
 		if(bv.gAction != null){
 		bv.menu.drawSelf(canvas, BattleView.listBmp, BattleView.iconBmp
-				, bv.gAction.getCol(), bv.gAction.getRow(), 0, 0);
+				, bv.gAction.getCol() - startCol, bv.gAction.getRow() - startRow , 0, 0);
 		}
 	}
 

@@ -20,21 +20,28 @@ public class StateFightMove implements GameState {
 	public boolean KeyDown(int keyCode) {
 		switch(keyCode){
 		case KeyEvent.KEYCODE_W:
-			//+1 是因为地图有一部分在屏幕外
-			bv.curRow = (bv.curRow-1 <= bv.startRow) ?(bv.startRow+1) : (bv.curRow-1);
-
+			bv.curRow = (bv.curRow-1 < 0) ? 0 : (bv.curRow-1);
+			if(bv.curRow < bv.startRow && bv.startRow > 0){
+				--bv.startRow;
+			}
 			break;
 		case KeyEvent.KEYCODE_A:
-			bv.curCol = (bv.curCol-1 <= bv.startCol) ?(bv.startCol+1) : (bv.curCol-1);
-
+			bv.curCol = (bv.curCol-1 < 0) ? 0 : (bv.curCol -1);
+			if(bv.curCol < bv.startCol && bv.startCol > 0){
+				--bv.startCol;
+			}
 			break;
 		case KeyEvent.KEYCODE_S:
-			bv.curRow = (bv.curRow+1 > bv.startRow + SCREEN_ROWS) ? (bv.startRow + SCREEN_ROWS ): (bv.curRow + 1);
-
+			bv.curRow = (bv.curRow + 1 > MAP_ROWS-1) ? (MAP_ROWS-1):(bv.curRow + 1);
+			if(bv.curRow > bv.startRow + SCREEN_ROWS -1 && bv.startRow + SCREEN_ROWS -1 < MAP_ROWS-1){
+				++bv.startRow;
+			}
 			break;
 		case KeyEvent.KEYCODE_D:
-			bv.curCol = (bv.curCol+1 > bv.startCol + SCREEN_COLS) ?(bv.startCol + SCREEN_COLS ): (bv.curCol+1);
-
+			bv.curCol = (bv.curCol + 1 > MAP_COLS-1) ? (MAP_COLS-1):(bv.curCol + 1);
+			if(bv.curCol > bv.startCol + SCREEN_COLS -1 && bv.startCol + SCREEN_COLS-1  < MAP_COLS-1){
+				++bv.startCol;
+			}
 			break;
 		case KeyEvent.KEYCODE_ENTER:
 			if(bv.moveList[bv.curRow][bv.curCol] > 0){
@@ -65,19 +72,19 @@ public class StateFightMove implements GameState {
 	}
 
 	@Override
-	public void Draw(Canvas canvas) {
+	public void Draw(Canvas canvas, int startCol, int startRow) {
 		//显示移动范围
-		for(int i=0;i<MAP_ROWS;++i)
+		for(int i=startRow;i<startRow+SCREEN_ROWS;++i)
 		{
-			for(int j=0;j<MAP_COLS;++j)
+			for(int j=startCol;j<startCol+SCREEN_COLS;++j)
 			{
 				if (bv.moveList[i][j] > -1) {
-					canvas.drawBitmap(BattleView.iconBmp[2], j * TILE, i * TILE,null);
+					canvas.drawBitmap(BattleView.iconBmp[2], (j-startCol) * TILE, (i-startRow) * TILE,null);
 				} 
 			}
 		}
 		//显示光标
-		canvas.drawBitmap(BattleView.iconBmp[0], bv.curCol * TILE ,bv.curRow * TILE, null);
+		canvas.drawBitmap(BattleView.iconBmp[0], (bv.curCol-startCol) * TILE ,(bv.curRow-startRow) * TILE, null);
 	}
 	
 	

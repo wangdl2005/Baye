@@ -62,8 +62,8 @@ public class BattleView {
 	public static Bitmap[] mapBitmap;
 	public static Bitmap actionEndBmp;
 	//双缓冲
-	private Bitmap bufferBmp;
-	private Canvas bufferCanvas;
+//	private Bitmap bufferBmp;
+//	private Canvas bufferCanvas;
 	public Menu menu;
 	//可以显示的屏幕最大
 	static final int maxX = MAP_COLS;
@@ -113,9 +113,9 @@ public class BattleView {
 			}
 		}
 		//设置双缓冲,每次现在bufferCanvas上把图片绘制完，最后将bufferBmp绘制到canvas上
-		//		比屏幕多出周围一圈，用于滚屏
-		bufferBmp = Bitmap.createBitmap((SCREEN_COLS + 2)*TILE,(SCREEN_ROWS+2)*TILE,Config.ARGB_8888);
-		bufferCanvas = new Canvas(bufferBmp);		
+		//		比屏幕多出周围一圈，用于滚屏	暂时不用，等需要使用滚屏技术时再使用
+//		bufferBmp = Bitmap.createBitmap(MAP_COLS *TILE,MAP_ROWS*TILE,Config.ARGB_8888);
+//		bufferCanvas = new Canvas(bufferBmp);		
 		battleViewThread = new BattleViewThread(this);
 		//menu
 		menu = new Menu(2);//先设定为只有两个菜单项
@@ -128,11 +128,11 @@ public class BattleView {
 	public void initGeneral(){
 		int[][] animatId = new int[][]
 				{
+				{0},
 				{1},
-				{2},
-				{3,4},
-				{5,6,7,8},
-				{9,10,11,12}
+				{2,3},
+				{4,5,6,7},
+				{8,9,10,11}
 				};
 		General player01 = new General(
 				gameView.gPersons.get(0), 0, posOri[0][1][0], posOri[0][1][1]);
@@ -209,14 +209,13 @@ public class BattleView {
 		
 	}
 	
-	public void drawBuffer(){
+	public void drawBuffer(Canvas canvas){
 		//涂白
-		bufferCanvas.drawColor(Color.WHITE);
-		
+		canvas.drawColor(Color.WHITE);
 		int tempStartRow = this.startRow;	//获取绘制起始行
 		int tempStartCol = this.startCol;	//获取绘制起始列
 		//绘制地图
-		map.onDraw(bufferCanvas,mapBitmap,tempStartCol,tempStartRow,0,0);
+		map.onDraw(canvas,mapBitmap,tempStartCol,tempStartRow,0,0);
 		//绘制移动范围
 		//绘制英雄
 		for(General g : playerList){
@@ -224,7 +223,7 @@ public class BattleView {
 			int col = g.getCol();
 			if((col-tempStartCol)*TILE  <0||(col-tempStartCol)*TILE >SCREEN_WIDTH)
 				continue;
-			g.drawSelf(bufferCanvas, getArmTypeBmp(g.getPerson().getArmsType()),actionEndBmp
+			g.drawSelf(canvas, getArmTypeBmp(g.getPerson().getArmsType()),actionEndBmp
 					,(col-tempStartCol)*TILE , (row-tempStartRow)*TILE );
 				
 		}	
@@ -236,7 +235,7 @@ public class BattleView {
 			int col = g.getCol();
 			if((col-tempStartCol)*TILE  <0||(col-tempStartCol)*TILE  >SCREEN_WIDTH)
 				continue;
-			g.drawSelf(bufferCanvas, getArmTypeBmp(g.getPerson().getArmsType()),actionEndBmp
+			g.drawSelf(canvas, getArmTypeBmp(g.getPerson().getArmsType()),actionEndBmp
 					, (col-tempStartCol)*TILE , (row-tempStartRow)*TILE );
 		}
 		//绘制菜单
@@ -244,7 +243,7 @@ public class BattleView {
 //			menu.drawSelf(bufferCanvas, listBmp, iconBmp, (4-tempStartCol)  , (9-tempStartRow) ,0,0);
 //		}
 		//根据状态绘制
-		stateManager.Draw(bufferCanvas);
+		stateManager.Draw(canvas,tempStartCol,tempStartRow);
 	}
 
 	public boolean OnKeyDown(int keyCode){
@@ -259,11 +258,9 @@ public class BattleView {
 	}
 	public void OnDraw(Canvas canvas){
 		//绘制中央屏幕
-		drawBuffer();
-		canvas.drawBitmap(bufferBmp, (-1-startCol) * TILE, (-1-startCol) * TILE, null);
+		drawBuffer(canvas);
 		//绘制小屏幕
 		drawMiniMap(canvas);
-		//绘制系统菜单
 	}
 	
 	//方法：绘制迷你地图

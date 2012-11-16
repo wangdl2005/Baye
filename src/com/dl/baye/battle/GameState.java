@@ -5,5 +5,5 @@ import android.graphics.Canvas;
 
 interface GameState{
 	boolean KeyDown(int keyCode);
-	void Draw(Canvas canvas);
+	void Draw(Canvas canvas, int startCol, int startRow);
 }

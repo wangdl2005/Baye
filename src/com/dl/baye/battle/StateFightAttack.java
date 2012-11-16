@@ -16,7 +16,7 @@ public class StateFightAttack implements GameState {
 	}
 
 	@Override
-	public void Draw(Canvas canvas) {
+	public void Draw(Canvas canvas, int startCol, int startRow) {
 		// TODO Auto-generated method stub
 
 	}

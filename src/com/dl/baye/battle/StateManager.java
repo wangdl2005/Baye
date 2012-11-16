@@ -35,8 +35,8 @@ public class StateManager {
 		return gameState.KeyDown(keyCode);
 	}
 	
-	public void Draw(Canvas canvas){
-		gameState.Draw(canvas);
+	public void Draw(Canvas canvas,int startCol,int startRow){
+		gameState.Draw(canvas, startCol	, startRow);
 	}
 	
 	public void FightMove(){
@@ -106,5 +106,8 @@ public class StateManager {
 		this.gameState = stateNone;		
 		Log.d(TAG, "进入None");
 	}
-	public void SysMenu(){this.gameState = stateSysMenu;			Log.d(TAG, "进入SysMenu");}
+	public void SysMenu(){
+		this.gameState = stateSysMenu;			
+		Log.d(TAG, "进入SysMenu");
+		}
 }

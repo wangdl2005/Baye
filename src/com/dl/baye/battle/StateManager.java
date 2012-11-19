@@ -49,6 +49,7 @@ public class StateManager {
 		Log.d(TAG, "进入Move");
 	}
 	public void FightMenu(){
+		bv.menu.open(2);
 		this.gameState = stateFightMenu; 
 		Log.d(TAG, "进入Menu");
 	}
@@ -107,6 +108,7 @@ public class StateManager {
 		Log.d(TAG, "进入None");
 	}
 	public void SysMenu(){
+		bv.menu.open(0);
 		this.gameState = stateSysMenu;			
 		Log.d(TAG, "进入SysMenu");
 		}

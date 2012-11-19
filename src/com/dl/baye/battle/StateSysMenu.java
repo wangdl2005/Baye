@@ -29,8 +29,14 @@ public class StateSysMenu implements GameState {
 			break;
 		case KeyEvent.KEYCODE_ENTER:			
 			if(bv.menu.getCurMenuItem().equals("结束")){ 
-				Log.d(TAG,"进入Enemy");
-				//TODO
+				if(BattleView.state == BattleView.STATE_NORMAL){
+					BattleView.state = BattleView.STATE_ENEMY;
+					Log.d(TAG,"进入Enemy");
+				}
+				else if(BattleView.state == BattleView.STATE_ENEMY){
+					BattleView.state = BattleView.STATE_NORMAL;
+					Log.d(TAG,"进入NORMAL");
+				}
 				BattleView.stateManager.None();
 				bv.menu.close();
 			}

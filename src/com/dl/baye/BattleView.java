@@ -30,14 +30,15 @@ public class BattleView {
 	Resources r;
 	BattleViewThread battleViewThread;
 	
-	int state;//0 : 选中武将，显示信息,1,显示移动范围2显示菜单,3,显示攻击范围4选择攻击目标
-	static final int STATE_MSG = 0;
-	static final int STATE_ENEMY  = 7;
+	public static int state;//0 : 选中武将，显示信息,1,显示移动范围2显示菜单,3,显示攻击范围4选择攻击目标
+	public static final int STATE_MSG = 0;
+	public static final int STATE_NORMAL  = 0x01;
+	public static final int STATE_ENEMY  = 0x10;
 	public static StateManager stateManager;
 	
 	public Map map;
-	private ArrayList<General> playerList = new ArrayList<General>();
-	private ArrayList<General> enemyList = new ArrayList<General>();
+	public ArrayList<General> playerList = new ArrayList<General>();
+	public ArrayList<General> enemyList = new ArrayList<General>();
 	public General gAction = null;//当前行动武将
 	public General gSel  = null;//当前选中武将
 	//
@@ -79,14 +80,18 @@ public class BattleView {
 		this.gameView = gameView;
 		this.r = gameView.getResources();
 		init();
+		start();
 	}
 	
 	public void start(){
-		this.battleViewThread.start();
+		this.battleViewThread.setFlag(true);
+		if(this.battleViewThread.isAlive() == false){
+			this.battleViewThread.start();
+		}
 	}
 	
 	public void exit(){
-		
+		this.battleViewThread.setFlag(false);
 	}
 	
 	public void init()
@@ -123,6 +128,8 @@ public class BattleView {
 		//初始化
 		gAction = null;
 		gSel = getGeneral(curCol, curRow);
+		
+		state = STATE_NORMAL;
 	}
 
 	public void initGeneral(){
@@ -227,8 +234,6 @@ public class BattleView {
 					,(col-tempStartCol)*TILE , (row-tempStartRow)*TILE );
 				
 		}	
-		//绘制攻击范围
-		//绘制移动路线
 		//绘制敌人
 		for(General g : enemyList){
 			int row = g.getRow();
@@ -238,10 +243,6 @@ public class BattleView {
 			g.drawSelf(canvas, getArmTypeBmp(g.getPerson().getArmsType()),actionEndBmp
 					, (col-tempStartCol)*TILE , (row-tempStartRow)*TILE );
 		}
-		//绘制菜单
-//		if(menu.isVisible()){
-//			menu.drawSelf(bufferCanvas, listBmp, iconBmp, (4-tempStartCol)  , (9-tempStartRow) ,0,0);
-//		}
 		//根据状态绘制
 		stateManager.Draw(canvas,tempStartCol,tempStartRow);
 	}
@@ -249,10 +250,11 @@ public class BattleView {
 	public boolean OnKeyDown(int keyCode){
 		switch(state){
 		case STATE_ENEMY:
+			stateManager.KeyDown(keyCode);
 			break;
-		default:
-				stateManager.KeyDown(keyCode);
-				break;
+		case STATE_NORMAL:
+			stateManager.KeyDown(keyCode);
+			break;
 		}
 		return true;
 	}
@@ -380,7 +382,7 @@ public class BattleView {
 		    txtUtil.DrawText(canvas);
 		    
 		    text = "场地加成 : " + "0";
-		    txtUtil = new TextUtil(text, MINI_MAP_START_X + 20, 480, 
+		    txtUtil = new TextUtil(text, MINI_MAP_START_X + 20, 478, 
 		    		180, 30, Color.WHITE, Color.BLACK, 0, 20);
 		    txtUtil.InitText();
 		    txtUtil.DrawText(canvas);

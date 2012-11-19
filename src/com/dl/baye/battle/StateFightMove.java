@@ -50,14 +50,12 @@ public class StateFightMove implements GameState {
 				isMoved = true;
 				bv.gAction.moveTo(bv.curCol, bv.curRow);
 				BattleView.stateManager.FightMenu();
-				bv.menu.open(2);
 			}
 			else if(bv.moveList[bv.curRow][bv.curCol] == 0){
 				this.oriCol = bv.gAction.getCol();
 				this.oriRow = bv.gAction.getRow();
 				isMoved = true;
 				BattleView.stateManager.FightMenu();
-				bv.menu.open(2);
 			}
 			break;
 		case KeyEvent.KEYCODE_DEL:

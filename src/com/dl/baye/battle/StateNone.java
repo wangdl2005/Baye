@@ -50,7 +50,6 @@ public class StateNone implements GameState {
 				}
 			}
 			else{
-				bv.menu.open(0);
 				BattleView.stateManager.SysMenu();
 			}
 			break;
